@@ -31,6 +31,12 @@ public:
     std::string getPasswordHash() const;
 
     /**
+     * @brief 获取该用户的任务管理器
+     * @return 返回该用户的任务管理器
+     */
+    TaskManager getTaskManager() const;
+
+    /**
      * @brief 散列密码
      * @param password 明文密码
      * @return 返回散列后的密码
@@ -51,10 +57,12 @@ public:
      */
     static bool login(const std::string &username, const std::string &passwordHash);
 
+    
+
 private:
     std::string username;     ///< 用户名
     std::string passwordHash; ///< 密码散列
-    TaskManager manager; //该用户的任务管理器
+    TaskManager manager;      // 该用户的任务管理器
 };
 
 #endif // USER_H

@@ -34,6 +34,8 @@ namespace Utils
      * @return 返回当前时间字符串（格式为YYYY-MM-DD HH:MM:SS）
      */
     std::string getCurrentTime();
+
+    int stringToInt(const std::string &str);
 }
 
 #endif // UTILS_H
