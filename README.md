@@ -11,18 +11,21 @@ ScheduleManager/
 │   ├── TaskManager.cpp          # TaskManager类实现
 │   ├── Reminder.cpp             # Reminder类实现
 │   ├── Utils.cpp                # 辅助函数实现
+│   ├── TimeUtils.cpp            # 时间处理工具类实现
 ├── include/
 │   ├── User.h                   # User类定义
 │   ├── Task.h                   # Task类定义
 │   ├── TaskManager.h            # TaskManager类定义
 │   ├── Reminder.h               # Reminder类定义
 │   ├── Utils.h                  # 辅助函数定义
+│   ├── TimeUtils.h              # 时间处理工具类定义
 ├── data/
 │   ├── users.txt                # 用户信息文件
 │   ├── tasks_user1.txt          # 用户1的任务文件
 │   └── tasks_user2.txt          # 用户2的任务文件
 ├── CMakeLists.txt               # CMake构建文件
 └── README.md                    # 项目说明文件
+
 ```
 
 ### 文件详细描述
