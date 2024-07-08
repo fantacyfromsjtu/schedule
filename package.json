@@ -1,0 +1,18 @@
+{
+  "name": "schedule",
+  "version": "1.0.0",
+  "description": "根据上述设计思路，这里是一个详细的文件目录结构，可以用于你的日程管理软件项目。该目录结构分为源代码、头文件、数据文件和其他辅助文件。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "sqlite3": "^5.1.7"
+  }
+}
