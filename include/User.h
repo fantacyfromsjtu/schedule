@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "TaskManager.h"
+
 /**
  * @brief 用户类，包含用户名和密码散列
  */
@@ -35,9 +37,24 @@ public:
      */
     static std::string hashPassword(const std::string &password);
 
+    /**
+     * @brief 注册函数
+     * @param 
+     * @return 是否成功注册 （检查用户名是否重复）
+     */
+    bool registeR();
+
+    /**
+     * @brief 登录函数
+     * @param
+     * @return 是否成功登录 （检查用户名是否存在（位于users.txt中），检查密码是否正确）
+     */
+    static bool login(const std::string &username, const std::string &passwordHash);
+
 private:
     std::string username;     ///< 用户名
     std::string passwordHash; ///< 密码散列
+    TaskManager manager; //该用户的任务管理器
 };
 
 #endif // USER_H
