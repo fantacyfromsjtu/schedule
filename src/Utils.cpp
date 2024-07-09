@@ -39,3 +39,7 @@ int Utils::stringToInt(const std::string &str)
 
     return static_cast<int>(result);
 }
+
+std::string Utils::getTaskFile(const std::string &username){
+    return "../data/tasks/" + username + "_task.txt";
+}

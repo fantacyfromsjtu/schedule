@@ -2,6 +2,7 @@
 #define TASKMANAGER_H
 
 #include "Task.h"
+#include "User.h"
 #include <vector>
 #include <string>
 #include <unordered_set>
@@ -12,8 +13,10 @@
 class TaskManager
 {
 public:
-    int getTasknum(){
-        return task_num;
+    TaskManager(std::string username);
+    int getTasknum()
+    {
+        return tasks.size();
     }
 
     /**
@@ -47,7 +50,7 @@ public:
      * @brief 保存任务到文件
      * @param filename 文件名
      */
-    void saveTasks(const std::string &filename) const;
+    bool saveTasks(const Task &task,const std::string &filename) const;
 
     /**
      * @brief 显示任务
@@ -60,20 +63,15 @@ public:
 
     bool isValidCategory(const std::string &category);
 
+    bool isValidStartTime(const std::string &startTime);
+
+    bool isValidRemindTime(const std::string &remindTime);
+
 private:
+    std::string taskfile; //该任务管理器对应的文件名
     std::vector<Task> tasks; ///< 任务列表
-
-    /**
-     * @brief 检查任务是否唯一
-     * @param task 要检查的任务
-     * @return 唯一则返回true，否则返回false
-     */
-    bool isUniqueTask(const Task &task) const;
-
-    std::unordered_set<std::string> prioritySet = {"high","medium","low"};
-    std::unordered_set<std::string> categorySet = {"study","life","other"};
-
-    int task_num = 0;
+    std::unordered_set<std::string> prioritySet ;
+    std::unordered_set<std::string> categorySet;
 };
 
 #endif // TASKMANAGER_H

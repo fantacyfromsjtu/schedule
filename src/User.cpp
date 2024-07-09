@@ -34,7 +34,7 @@ bool User::registeR()
     // 是新用户，则更新users.txt，并且新建task/<username>_task_task.txt
     std::ofstream file(usersfile, std::ios::app);
     file << this->username << " " << this->passwordHash << std::endl;
-    std::string taskFilename = "../data/tasks/" + username + "_task_task.txt";
+    std::string taskFilename =Utils::getTaskFile(username);
     std::ofstream taskFile(taskFilename);
     if (taskFile.is_open())
     {

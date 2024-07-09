@@ -49,6 +49,8 @@ public:
      */
     static std::string formatTime(const std::chrono::system_clock::time_point &timePoint);
 
+    static bool TimeUtils::isValidTime(const std::string &timeStr);
+
 private:
     /**
      * @brief 获取当前系统时间并调整为东八区时间

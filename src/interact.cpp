@@ -56,7 +56,12 @@ void ask_add(TaskManager &usermanager)
     std::cout << "任务开始时间（格式为YYYY-MM-DD HH:MM:SS）： \n";
     std::cin >> startTime; 
 
-    //TODO:合法性检查：包括任务开始时间的格式，以及唯一性
+    //TODO:合法性检查：包括任务开始时间的格式，以及唯一性,开始时间是否早于当前时间
+    if(!usermanager.isValidStartTime(startTime)){
+        std::cout << "启动时间非法！\n";
+        return;
+    }
+
 
     std::cout << "优先级（默认为medium）\n";
     std::cin >> priority;
@@ -75,8 +80,19 @@ void ask_add(TaskManager &usermanager)
     std::cin >> remindTime;
     
     //TODO:合法性检查：包括时间格式，提醒时间是否在任务启动时间之前等等
+    if (!usermanager.isValidRemindTime(startTime))
+    {
+        std::cout << "提醒时间非法！\n";
+        return;
+    }
 
-    // TODO: 按照目前该用户的任务id序列分配一个id （升序）
+    // 按照目前该用户的任务id序列分配一个id （升序）
     int id = usermanager.getTasknum() + 1;
     Task newtask(id, name, startTime, priority, category, remindTime);
+    if(usermanager.addTask(newtask)){
+        std::cout << "添加任务 " << newtask.getName() << "成功！\n";
+    }
+    else{
+        std::cerr << "添加任务 " << newtask.getName() << "失败\n";
+    }
 }
