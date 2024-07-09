@@ -23,6 +23,12 @@ public:
     static std::string getCurrentMonth();
 
     /**
+     * @brief 获取当前时间
+     * @return 返回当前时间字符串（格式为YYYY-MM-DD HH:MM:SS）
+     */
+    static std::string getCurrentTime();
+
+    /**
      * @brief 验证日期格式
      * @param date 输入日期字符串
      * @return 格式正确返回true，否则返回false
@@ -42,6 +48,13 @@ public:
      * @return 返回格式化后的时间字符串（格式为YYYY-MM-DD HH:MM:SS）
      */
     static std::string formatTime(const std::chrono::system_clock::time_point &timePoint);
+
+private:
+    /**
+     * @brief 获取当前系统时间并调整为东八区时间
+     * @return 返回当前时间的std::tm结构
+     */
+    static std::tm getLocalTime();
 };
 
 #endif // TIMEUTILS_H
