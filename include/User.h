@@ -2,7 +2,7 @@
 #define USER_H
 
 #include <string>
-
+#include "Utils.h"
 #include "TaskManager.h"
 
 /**
@@ -16,27 +16,26 @@ public:
      * @param username 用户名
      * @param passwordHash 密码散列
      */
-    User(const std::string &username, const std::string &passwordHash);
+    User(const std::string &username, const std::string &passwordHash):username(username),passwordHash(passwordHash){}
 
     /**
      * @brief 获取用户名
      * @return 返回用户名
      */
-    std::string getUsername() const;
+    std::string getUsername() const { return username; };
 
     /**
      * @brief 获取密码散列
      * @return 返回密码散列
      */
-    std::string getPasswordHash() const;
-
+    std::string getPasswordHash() const { return passwordHash; };
 
     /**
      * @brief 散列密码
      * @param password 明文密码
      * @return 返回散列后的密码
      */
-    static std::string hashPassword(const std::string &password);
+    static std::string hashPassword(const std::string &password) { return Utils::sha256(password); };
 
     /**
      * @brief 注册函数

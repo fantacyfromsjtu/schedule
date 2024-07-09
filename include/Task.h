@@ -26,37 +26,37 @@ public:
      * @brief 获取任务ID
      * @return 返回任务ID
      */
-    int getId() const;
+    int getId() const { return id; };
 
     /**
      * @brief 获取任务名称
      * @return 返回任务名称
      */
-    std::string getName() const;
+    std::string getName() const { return name; };
 
     /**
      * @brief 获取任务开始时间
      * @return 返回任务开始时间
      */
-    std::string getStartTime() const;
+    std::string getStartTime() const { return TimeUtils::formatTime(startTime); };
 
     /**
      * @brief 获取任务优先级
      * @return 返回任务优先级
      */
-    std::string getPriority() const;
+    std::string getPriority() const { return priority; };
 
     /**
      * @brief 获取任务分类
      * @return 返回任务分类
      */
-    std::string getCategory() const;
+    std::string getCategory() const { return category; };
 
     /**
      * @brief 获取提醒时间
      * @return 返回提醒时间
      */
-    std::string getReminderTime() const;
+    std::string getReminderTime() const { return TimeUtils::formatTime(reminderTime); };
 
 private:
     int id;                                             ///< 任务ID

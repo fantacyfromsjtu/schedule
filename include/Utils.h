@@ -4,7 +4,9 @@
 #include <string>
 #include <fstream>
 #include <vector>
-
+#include <iomanip>
+#include <sstream>
+#include <openssl/sha.h>
 namespace Utils
 {
     /**
@@ -36,6 +38,8 @@ namespace Utils
     std::string getCurrentTime();
 
     int stringToInt(const std::string &str);
+
+    std::string sha256(const std::string &str);
 }
 
 #endif // UTILS_H

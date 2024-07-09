@@ -5,7 +5,7 @@
 #include "TaskManager.h"
 #include "User.h"
 #include "Utils.h"
-#include  "interact.h"
+#include "interact.h"
 
 int main(int argc, char *argv[])
 {
@@ -119,15 +119,21 @@ int main(int argc, char *argv[])
             {
                 ask_add(user_manager);
             }
-            else if(command == "q"){
+            else if (command == "q")
+            {
                 // 退出
                 std::cout << "日志系统，关闭！\n";
                 return 0;
             }
-            else {
+            else
+            {
                 std::cerr << "Invalid cmd!\n";
                 showHelp();
             }
         }
+    }
+    else
+    {
+        std::cerr << "Invalid argument！\n";
     }
 }
