@@ -4,6 +4,7 @@
 #include "Task.h"
 #include <vector>
 #include <string>
+#include <unordered_set>
 
 /**
  * @brief 任务管理类，管理任务的添加、删除、显示等操作
@@ -11,6 +12,10 @@
 class TaskManager
 {
 public:
+    int getTasknum(){
+        return task_num;
+    }
+
     /**
      * @brief 添加任务
      * @param task 要添加的任务
@@ -49,7 +54,11 @@ public:
      * @param month 月份（格式为YYYY-MM，缺省则为当前月份）
      * @param day 日期（格式为YYYY-MM-DD，缺省则为当前日期）
      */
-    void showTask(const std::string &month = "", const std::string &day = "") const;
+    bool showTask(const std::string &month = "", const std::string &day = "") const;
+
+    bool isValidPriority(const std::string &priority);
+
+    bool isValidCategory(const std::string &category);
 
 private:
     std::vector<Task> tasks; ///< 任务列表
@@ -60,6 +69,11 @@ private:
      * @return 唯一则返回true，否则返回false
      */
     bool isUniqueTask(const Task &task) const;
+
+    std::unordered_set<std::string> prioritySet = {"high","medium","low"};
+    std::unordered_set<std::string> categorySet = {"study","life","other"};
+
+    int task_num = 0;
 };
 
 #endif // TASKMANAGER_H

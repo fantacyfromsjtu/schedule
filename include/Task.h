@@ -20,7 +20,7 @@ public:
      * @param category 任务分类（默认一般）
      * @param reminderTime 提醒时间（格式为YYYY-MM-DD HH:MM:SS）
      */
-    Task(int id, const std::string &name, const std::string &startTime, const std::string &priority = "medium", const std::string &category = "general", const std::string &reminderTime = "");
+    Task(int id, const std::string &name, const std::string &startTime, const std::string &priority = "medium", const std::string &category = "other", const std::string &reminderTime = "");
 
     /**
      * @brief 获取任务ID

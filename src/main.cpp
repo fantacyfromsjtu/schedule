@@ -5,10 +5,7 @@
 #include "TaskManager.h"
 #include "User.h"
 #include "Utils.h"
-void showHelp() // 打印帮助
-{
-    std::cout << "\nUsage:\n";
-}
+#include  "interact.h"
 
 int main(int argc, char *argv[])
 {
@@ -45,10 +42,7 @@ int main(int argc, char *argv[])
                 while (1)
                 {
                     std::cout << "注册界面\n";
-                    std::cout << "用户名：\n";
-                    std::cin >> username;
-                    std::cout << "密码：\n ";
-                    std::cin >> password;
+                    ask_name_passwd(username, password);
                     User new_user(username, User::hashPassword(password));
                     if (new_user.registeR())
                     {
@@ -65,10 +59,7 @@ int main(int argc, char *argv[])
             case 'l':
             { // 登录
                 std::cout << "登录界面\n";
-                std::cout << "用户名：\n";
-                std::cin >> username;
-                std::cout << "密码：\n ";
-                std::cin >> password;
+                ask_name_passwd(username, password);
                 if (User::login(username, User::hashPassword(password)))
                 {
                     std::cout << "登录成功！\n";
@@ -98,7 +89,7 @@ int main(int argc, char *argv[])
         User user(username, User::hashPassword(password));
         // 加载任务
         std::cout << "任务加载中！\n";
-        TaskManager user_manager = user.getTaskManager();
+        TaskManager user_manager = user.manager;
         std::string filename = "../data/tasks/" + username + "_task.txt";
         user_manager.loadTasks(filename);
         std::cout << "任务加载成功！\n";
@@ -110,39 +101,33 @@ int main(int argc, char *argv[])
             std::string command;
             std::cin >> command;
             transform(command.begin(), command.end(), command.begin(), ::tolower); // 转小写
-            std::vector<std::string> parsed_cmd = Utils::split(command, ' ');      // 分割命令
+            // std::vector<std::string> parsed_cmd = Utils::split(command, ' ');      // 分割命令
 
             if (command == "-h")
             {
                 showHelp();
             }
-            else if (parsed_cmd[0] == "deltask" && parsed_cmd.size() == 2)
+            else if (command == "deltask")
             {
-                int del_id = Utils::stringToInt(parsed_cmd[1]);
-                user_manager.deleteTask(del_id);
+                ask_del(user_manager);
             }
-            else if (parsed_cmd[0] == "showtask")
+            else if (command == "showtask")
             {
-                switch (parsed_cmd.size())
-                {
-                case 1:
-                    user_manager.showTask();
-                    break;
-                case 2:
-                    user_manager.showTask(parsed_cmd[1]);
-                    break;
-                case 3:
-                    user_manager.showTask(parsed_cmd[1], parsed_cmd[2]);
-                default:
-                    std::cerr << "wrong number of args!\n";
-                    showHelp();
-                }
+                ask_show(user_manager);
             }
-            else if (parsed_cmd[0] == "addtask")
+            else if (command == "addtask")
             {
-                /* 等待用户输入具体任务 */
+                ask_add(user_manager);
             }
-            
-            
+            else if(command == "q"){
+                // 退出
+                std::cout << "日志系统，关闭！\n";
+                return 0;
+            }
+            else {
+                std::cerr << "Invalid cmd!\n";
+                showHelp();
+            }
         }
     }
+}
