@@ -20,10 +20,10 @@ const changePassword = async (req, res) => {
     const rst = await svr.changePassword(userId, newPassword);
     if (rst) {
         res.status(200);
-        res.send('Password Changed Successfully');
+        res.send('修改密码成功');
     } else {
         res.status(404);
-        res.send('Failed to change password');
+        res.send('修改密码失败');
     }
     // Send appropriate response to the client
 }

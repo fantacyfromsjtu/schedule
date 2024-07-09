@@ -2,7 +2,7 @@ const express = require('express');
 const session = require('express-session')
 const path = require('path');
 const app = express();
-const port = 3000;
+const port = 4444;
 
 // Set up middleware, such as body-parser, to parse request bodies
 app.use(express.json());

@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html>
+  <audio controls="controls" hidden src="./Dung_Def_roar_02.ogg" id="audio"></audio>
+
 <head>
-  <title>Dashboard</title>
+  <title>任务表单页面</title>
   <link rel="stylesheet" href="dashboard_style.css">
 </head>
 <body>
     <main class="table">
         <section class="table__header">
-            <h1>Tasks</h1>
+            <h1>任务表单</h1>
         </section>
         <section class="table__body">
             <table>
                 <thead>
                     <tr>
-                        <th> Id <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> Name <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> StartTime <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> Priority <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> Category <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> ReminderTime <span class="icon-arrow">&UpArrow;</span></th>
-                        <th> OVERDUE <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> 任务id <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> 任务名称 <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> 启动时间 <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> 优先级别 <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> 任务类别 <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> 提醒时间 <span class="icon-arrow">&UpArrow;</span></th>
+                        <th> 是否超时 <span class="icon-arrow">&UpArrow;</span></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -34,7 +36,7 @@
         <input type="date" id="date_to_show" name="date_to_show" placeholder="Enter the date of tasks">
     </div>
     <script>
-        let flag = new Array(1000).fill(false);
+        let flag = new Array(500).fill(false);
         const checkbox = document.getElementById('date_checkbox');
       function transferTimeFromat(time){
         const year = time.getFullYear();
@@ -86,11 +88,16 @@
             tr.appendChild(th6);
             tr.appendChild(th7);
             tbody.appendChild(tr);
-            if(task.reminderTime <=time && !flag[task.taskId]){
-                alert(`Task ${task.taskId} is OVERDUE`);
-                flag[task.taskId] = true;
-            }
-          });
+                  if(task.reminderTime <= time && !flag[task.taskId]) {
+                    alert(`任务 ${task.taskId} 已超时！`);
+                    const audio = document.getElementById('audio'); // 获取audio元素
+                    audio.currentTime = 0; // 从头开始播放
+                    audio.play().catch(e => console.error("音频播放失败:", e)); // 尝试播放
+                    flag[task.taskId] = '是';
+                  }
+                  else if (task.reminderTime > time && !flag[task.taskId]) {
+                    flag[task.taskId] = '否';}
+                });
         });
       }
       // Call the fetchData function initially
@@ -99,12 +106,12 @@
     </script> 
     <div class="addtask">
         <form id="add-task-form">
-            <input type="text" id="name" name="name" placeholder="Enter task name" required>
-            <input type="datetime-local" id="startTime" name="startTime" placeholder="Enter task start time" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required>
-            <input type="text" id="priority" name="priority" placeholder="Enter task priority" required>
-            <input type="text" id="category" name="category" placeholder="Enter task category" required>
-            <input type="datetime-local" id="reminderTime" name="reminderTime" placeholder="Enter task reminder time" required>
-            <button type="submit">Add Task</button>
+          <input type="text" id="name" name="name" placeholder="Enter task name" required>
+          <input type="datetime-local" id="startTime" name="startTime" placeholder="Enter task start time" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}" required>
+          <input type="text" id="priority" name="priority" placeholder="Enter task priority" required>
+          <input type="text" id="category" name="category" placeholder="Enter task category" required>
+          <input type="datetime-local" id="reminderTime" name="reminderTime" placeholder="Enter task reminder time" required>
+            <button type="submit">填加任务</button>
           </form>
         <script>
             document.getElementById('add-task-form').addEventListener('submit', function(event) {
@@ -141,8 +148,8 @@
     </div>
     <div class="deletetask">
         <form id="deleteTaskForm">
-            <input type="text" id="taskId" name="taskId" placeholder="Enter task Id" required>
-            <button type="submit">Delete Task</button>
+            <input type="text" id="taskId" name="taskId" placeholder="输入任务id" required>
+            <button type="submit">删除任务</button>
         </form>
         
           <script>

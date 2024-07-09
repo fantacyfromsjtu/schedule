@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Login Page</title>
+  <title>登录页面</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="box">
-    <h2>Login</h2>
+    <h2>NIS1336</h2>
     <form action="/login" method="POST">
       <div class="input-box">
-        <label for="username">Username:</label>
+        <label for="username">用户名:</label>
         <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Password:</label>
+        <label for="password">密码:</label>
         <input type="password" id="password" name="password" required><br><br>
-        <input type="submit" value="Login">
+        <input type="submit" value="登录">
       </div>
     </form>
     <div class="input-box">
-      <input type="button" value="Sign Up" onclick="redirectToSignUp()">
+      <input type="button" value="注册" onclick="redirectToSignUp()">
       <script>
         function redirectToSignUp(){
           window.location.href = 'signup.html';
