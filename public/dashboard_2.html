@@ -10,6 +10,14 @@
   </script>
 </head>
 <body>
+  <div class="button-container">
+    <a href="secret.html" class="button secrettask">修改密码</a>
+  </div>
+  <script>
+        document.querySelector('.secrettask').addEventListener('click', function() {
+            window.location.href = 'secret.html';
+        });
+  </script>
     <main class="table">
         <section class="table__header">
             <h1>任务表单</h1>

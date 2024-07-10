@@ -383,6 +383,7 @@ thead th.active,tbody td.active {
     transition: 0.2s;
 }
 
+
 .deletetask button{
     background-color:#ffffff;
     color: #000000;
@@ -390,6 +391,29 @@ thead th.active,tbody td.active {
     border-radius:10px;
     box-shadow: 0px 0px 2px 2px rgb(155, 132, 132);
 }
+
+.button-container {
+    position: fixed; /* 使用fixed而不是absolute来确保按钮始终在视口右下角 */
+    right: 50px; /* 右边距 */
+    bottom: 60px; /* 底部距离 */
+    display: flex; /* 使用flex布局使按钮水平排列 */
+    gap: 5px; /* 按钮之间的间隔 */
+}
+
+.button {
+    /* 通用按钮样式 */
+    padding: 3px 6px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none; /* 移除a标签的下划线 */
+    color: rgb(114, 6, 6); /* 按钮文字颜色 */
+}
+
+.secrettask {
+    background-color: #f2f3f1e6; /* 修改密码按钮背景颜色 */
+}
+
 
 .check_by_date{
     position: absolute;

@@ -180,7 +180,7 @@ async function loginUser(username, password) {
 async function changePassword(userId, newPassword) {
   const db = await openDB();
 
-  const sql = 'UPDATE Users SET password = ? WHERE id = ?';
+  const sql = 'UPDATE Users SET id = ? WHERE password = ?';
   const encryptedNewPassword = CryptoJS.SHA256(newPassword).toString();
   const values = [encryptedNewPassword, userId];
   let rst = false;
