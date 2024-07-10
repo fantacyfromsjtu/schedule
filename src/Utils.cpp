@@ -1,18 +1,27 @@
 #include "Utils.h"
-#include <climits>
+#include <openssl/evp.h>
+#include <sstream>
+#include <iomanip>
+
 std::string Utils::sha256(const std::string &str)
 {
-    unsigned char hash[SHA256_DIGEST_LENGTH];
-    SHA256_CTX sha256;
-    SHA256_Init(&sha256);
-    SHA256_Update(&sha256, str.c_str(), str.size());
-    SHA256_Final(hash, &sha256);
+    unsigned char hash[EVP_MAX_MD_SIZE];
+    unsigned int lengthOfHash = 0;
 
+    // 创建并初始化 EVP_MD_CTX
+    EVP_MD_CTX *context = EVP_MD_CTX_new();
+    EVP_DigestInit_ex(context, EVP_sha256(), nullptr);
+    EVP_DigestUpdate(context, str.c_str(), str.size());
+    EVP_DigestFinal_ex(context, hash, &lengthOfHash);
+    EVP_MD_CTX_free(context);
+
+    // 将结果转换为十六进制字符串表示
     std::stringstream ss;
-    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
+    for (unsigned int i = 0; i < lengthOfHash; ++i)
     {
         ss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
     }
+
     return ss.str();
 }
 

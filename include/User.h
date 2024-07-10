@@ -16,7 +16,7 @@ public:
      * @param username 用户名
      * @param passwordHash 密码散列
      */
-    User(const std::string &username, const std::string &passwordHash):username(username),passwordHash(passwordHash){}
+    User(const std::string &username, const std::string &passwordHash);
 
     /**
      * @brief 获取用户名

@@ -1,6 +1,7 @@
 #ifndef TASK_H
 #define TASK_H
-
+#include <iostream>
+#include <iomanip>
 #include <string>
 #include <chrono>
 #include "TimeUtils.h"
@@ -20,7 +21,9 @@ public:
      * @param category 任务分类（默认一般）
      * @param reminderTime 提醒时间（格式为YYYY-MM-DD HH:MM:SS）
      */
-    Task(int id, const std::string &name, const std::string &startTime, const std::string &priority = "medium", const std::string &category = "other", const std::string &reminderTime = "");
+    Task(int id, const std::string &name, const std::string &startTime,
+         const std::string &priority = "medium", const std::string &category = "other",
+         const std::string &reminderTime = "");
 
     /**
      * @brief 获取任务ID
@@ -58,6 +61,7 @@ public:
      */
     std::string getReminderTime() const { return TimeUtils::formatTime(reminderTime); };
 
+    void printself() const;
 
 private:
     int id;                                             ///< 任务ID

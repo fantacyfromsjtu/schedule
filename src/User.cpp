@@ -3,6 +3,11 @@
 #include <map>
 #include <iostream>
 
+//构造函数
+User::User(const std::string &username, const std::string &passwordHash)
+    : username(username), passwordHash(passwordHash), manager(username)
+{}
+
 const std::string usersfile = "../data/users.txt";
 // 读取用户文件并存储用户名和哈希值
 std::map<std::string, std::string>

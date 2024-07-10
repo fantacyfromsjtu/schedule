@@ -49,7 +49,7 @@ public:
      */
     static std::string formatTime(const std::chrono::system_clock::time_point &timePoint);
 
-    static bool TimeUtils::isValidTime(const std::string &timeStr);
+    static bool isValidTime(const std::string &timeStr);
 
 private:
     /**

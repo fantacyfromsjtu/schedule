@@ -9,12 +9,33 @@
  * @param reminderTime 提醒时间（格式为YYYY-MM-DD HH:MM:SS）
  */
 Task::Task(int id, const std::string &name, const std::string &startTime,
-           const std::string &priority = "medium", const std::string &category = "other", const std::string &reminderTime = "")
+           const std::string &priority, const std::string &category,
+           const std::string &reminderTime)
 {
     this->id = id;
     this->name = name;
     this->startTime = TimeUtils::parseTime(startTime);
     this->priority = priority;
     this->category = category;
-    this->reminderTime = TimeUtils::parseTime(reminderTime);
+    if (!reminderTime.empty())
+    {
+        this->reminderTime = TimeUtils::parseTime(reminderTime);
+    }
+    else{
+        this->reminderTime = this->startTime;
+    }
+}
+
+void Task::printself() const
+{
+    // 定义每列的宽度
+    const int width = 15;
+
+    std::cout << std::left; // 左对齐
+    std::cout << std::setw(width) << "Task ID:" << id << std::endl;
+    std::cout << std::setw(width) << "Name:" << name << std::endl;
+    std::cout << std::setw(width) << "Start Time:" << getStartTime() << std::endl;
+    std::cout << std::setw(width) << "Priority:" << priority << std::endl;
+    std::cout << std::setw(width) << "Category:" << category << std::endl;
+    std::cout << std::setw(width) << "Reminder Time:" << getReminderTime() << std::endl;
 }

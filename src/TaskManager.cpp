@@ -38,17 +38,17 @@ bool TaskManager::deleteTask(int id)
 {
     auto it = std::find_if(tasks.begin(), tasks.end(), [id](const Task &task)
                            { return task.getId() == id; });
-    if(it == tasks.end())
+    if (it == tasks.end())
         return false;
 
-    tasks.erase(it); //删除该任务
+    tasks.erase(it); // 删除该任务
     // 更新文件
     //  读取文件内容
     std::ifstream fileIn(taskfile);
     if (!fileIn)
     {
         std::cerr << "Unable to open file: " << taskfile << std::endl;
-        return;
+        return false;
     }
 
     std::vector<std::string> lines;
@@ -70,7 +70,7 @@ bool TaskManager::deleteTask(int id)
     if (!fileOut)
     {
         std::cerr << "Unable to open file for writing: " << taskfile << std::endl;
-        return;
+        return false;
     }
 
     for (const auto &l : lines)
@@ -78,15 +78,7 @@ bool TaskManager::deleteTask(int id)
         fileOut << l << std::endl;
     }
     fileOut.close();
-}
-
-/**
- * @brief 根据日期获取任务
- * @param date 日期（格式为YYYY-MM-DD）
- * @return 返回指定日期的任务列表
- */
-std::vector<Task> TaskManager::getTasksByDate(const std::string &date) const
-{
+    return true;
 }
 
 /**
@@ -95,10 +87,10 @@ std::vector<Task> TaskManager::getTasksByDate(const std::string &date) const
  */
 void TaskManager::loadTasks(const std::string &filename)
 {
-    int id;                                             
-    std::string name;                                   
-    std::string startTime;    
-    std::string priority;                               
+    int id;
+    std::string name;
+    std::string startTime;
+    std::string priority;
     std::string category;
     std::string reminderTime;
     std::ifstream taskfile(filename);
@@ -140,25 +132,69 @@ bool TaskManager::saveTasks(const Task &task, const std::string &filename) const
  * @param month 月份（格式为YYYY-MM，缺省则为当前月份）
  * @param day 日期（格式为YYYY-MM-DD，缺省则为当前日期）
  */
-bool TaskManager::showTask(const std::string &month = "", const std::string &day = "") const
+bool TaskManager::showTask(const std::string &month, const std::string &day)
 {
-    return true;
+    //先排序
+    sort_by_startTime();
+    std::string targetmonth = month;
+    std::string targetdate = day;
+    if(month.empty()){
+        targetmonth = TimeUtils::getCurrentMonth();
+    }
+    if(day.empty()){
+        targetdate = TimeUtils::getCurrentDate();
+    }
+    bool found = false;
+    for(const auto & task : tasks){
+        std::string taskDate = task.getStartTime().substr(0, 10); // starttime格式为YYYY-MM-DD HH:MM:SS
+        std::string taskMonth = task.getStartTime().substr(0, 7); 
+        if (!day.empty() && taskDate == targetdate)
+        {
+            // 显示具体日期的任务
+            task.printself();
+            found = true;
+        }
+        else if (day.empty() && taskMonth == targetmonth)
+        {
+            // 显示整个月份的任务
+            task.printself();
+            found = true;
+        }
+    }
+    return found;
 }
 
 bool TaskManager::isValidPriority(const std::string &priority)
 {
-    return true;
+    return this->prioritySet.count(priority) != 0;
 }
 
 bool TaskManager::isValidCategory(const std::string &category)
 {
-    return true;
+    return this->categorySet.count(category) != 0;
 }
 
 bool TaskManager::isValidStartTime(const std::string &startTime)
 {
+    if (TimeUtils::isValidTime(startTime) &&
+        TimeUtils::parseTime(TimeUtils::getCurrentTime()) < TimeUtils::parseTime(startTime))
+    {
+        return true;
+    }
+    return false;
 }
 
-bool TaskManager::isValidRemindTime(const std::string &remindTime)
+bool TaskManager::isValidRemindTime(const std::string &remindTime, const std::string &startTime)
 {
+    if (TimeUtils::isValidTime(remindTime) &&
+        TimeUtils::parseTime(remindTime) <= TimeUtils::parseTime(startTime))
+    {
+        return true;
+    }
+    return false;
+}
+
+void TaskManager::sort_by_startTime()
+{
+
 }

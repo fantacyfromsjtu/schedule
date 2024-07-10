@@ -6,7 +6,7 @@
 #include <vector>
 #include <iomanip>
 #include <sstream>
-#include <openssl/sha.h>
+#include <openssl/evp.h>
 namespace Utils
 {
 
