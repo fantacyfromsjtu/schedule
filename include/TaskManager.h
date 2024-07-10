@@ -20,7 +20,7 @@ public:
         return tasks.size();
     }
 
-    const std::vector<Task> getTasks() const
+    std::vector<Task> getTasks()
     {
         return tasks;
     }

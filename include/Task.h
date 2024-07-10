@@ -62,6 +62,7 @@ public:
     std::string getReminderTime() const { return TimeUtils::formatTime(reminderTime); };
 
     void printself() const;
+    bool reminded;
 
 private:
     int id;                                             ///< 任务ID
@@ -70,6 +71,7 @@ private:
     std::chrono::system_clock::time_point reminderTime; ///< 提醒时间
     std::string priority;                               ///< 任务优先级
     std::string category;                               ///< 任务分类
+    
 };
 
 #endif // TASK_H

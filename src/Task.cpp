@@ -24,6 +24,7 @@ Task::Task(int id, const std::string &name, const std::string &startTime,
     else{
         this->reminderTime = this->startTime;
     }
+    this->reminded = false;
 }
 
 void Task::printself() const

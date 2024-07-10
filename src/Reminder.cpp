@@ -2,7 +2,7 @@
 #include <iostream>
 #include <ctime>
 
-Reminder::Reminder(const TaskManager &taskManager)
+Reminder::Reminder(TaskManager &taskManager)
     : taskManager(taskManager), running(false) {}
 
 void Reminder::start()
@@ -28,12 +28,13 @@ void Reminder::stop()
 void Reminder::checkReminders()
 {
     auto now = TimeUtils::parseTime(TimeUtils::getCurrentTime());
-    for (const auto &task : taskManager.getTasks())
+    for (auto &task : taskManager.getTasks())
     {
         auto remindTime = TimeUtils::parseTime(task.getReminderTime());
         auto startTime = TimeUtils::parseTime(task.getStartTime());
-        if (remindTime <= now && remindTime <= startTime && now + std::chrono::seconds(10) > remindTime) //10s 提前量
+        if (!task.reminded&&remindTime <= now && remindTime <= startTime && now + std::chrono::seconds(10) > remindTime) //10s 提前量
         {
+            task.reminded = true;
             std::cout << "REMIND!!\n";
             task.printself();
             std::cout << "IS TO START SOON!\n";

@@ -116,7 +116,7 @@ bool TaskManager::saveTasks(const Task &task, const std::string &filename) const
     if (taskFile.is_open())
     {
         taskFile << task.getId() << " " << task.getName() << " " << task.getStartTime() << " "
-                 << task.getPriority() << " " << task.getCategory() << task.getReminderTime();
+                 << task.getPriority() << " " << task.getCategory() << " "<<task.getReminderTime();
         taskFile.close();
     }
     else

@@ -16,7 +16,7 @@ public:
      * @brief 构造函数
      * @param taskManager 任务管理器的引用
      */
-    Reminder(const TaskManager &taskManager);
+    Reminder(TaskManager &taskManager);
 
     /**
      * @brief 开始提醒检查循环
@@ -29,7 +29,7 @@ public:
     void stop();
 
 private:
-    const TaskManager &taskManager; ///< 任务管理器的引用
+    TaskManager &taskManager; ///< 任务管理器的引用
     std::atomic<bool> running;      ///< 控制线程运行的标志
     std::thread reminderThread;     ///< 提醒线程
 
