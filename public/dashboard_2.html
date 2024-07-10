@@ -5,6 +5,9 @@
 <head>
   <title>任务表单页面</title>
   <link rel="stylesheet" href="dashboard_style.css">
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  </script>
 </head>
 <body>
     <main class="table">
@@ -52,6 +55,7 @@
         time = transferTimeFromat(time);
         const bydate = document.getElementById('date_to_show')
         console.log(bydate.value);
+
         let choice = '/query-tasks';
         if(checkbox.checked && bydate.value){
             choice = '/tasks?date=' + bydate.value ;
@@ -88,16 +92,16 @@
             tr.appendChild(th6);
             tr.appendChild(th7);
             tbody.appendChild(tr);
-                  if(task.reminderTime <= time && !flag[task.taskId]) {
+            if(task.reminderTime <= time && !flag[task.taskId]) {
                     alert(`任务 ${task.taskId} 已超时！`);
                     const audio = document.getElementById('audio'); // 获取audio元素
                     audio.currentTime = 0; // 从头开始播放
                     audio.play().catch(e => console.error("音频播放失败:", e)); // 尝试播放
-                    flag[task.taskId] = '是';
-                  }
-                  else if (task.reminderTime > time && !flag[task.taskId]) {
-                    flag[task.taskId] = '否';}
+                    flag[task.taskId] = true;
+                  }      
                 });
+                // 更新localStorage中的flag对象
+                localStorage.setItem('flags', JSON.stringify(flag));
         });
       }
       // Call the fetchData function initially

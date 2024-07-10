@@ -1,6 +1,5 @@
-const sqlite3 = require('sqlite3').verbose();
+//用户认证模块
 
-// Middleware function to check if the user exists
 function checkUser(req, res, next) {
   if(req.session && req.session.user) next()
   else {
@@ -9,8 +8,8 @@ function checkUser(req, res, next) {
   }
 }
 
-// Export the middleware function(s)
 const auth = {
   checkUser,
 };
+
 module.exports = auth;
