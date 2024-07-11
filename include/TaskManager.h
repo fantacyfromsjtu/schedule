@@ -15,12 +15,15 @@ class TaskManager
 {
 public:
     TaskManager(std::string username);
-    int getTasknum()
+
+    int getTasknum() const { return tasks.size(); }
+
+    std::string getTaskfile() const
     {
-        return tasks.size();
+        return this->taskfile;
     }
 
-    std::vector<Task> getTasks()
+    std::vector<Task>& getTasks()
     {
         return tasks;
     }

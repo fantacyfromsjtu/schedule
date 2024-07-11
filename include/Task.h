@@ -23,7 +23,7 @@ public:
      */
     Task(int id, const std::string &name, const std::string &startTime,
          const std::string &priority = "medium", const std::string &category = "other",
-         const std::string &reminderTime = "");
+         const std::string &reminderTime = "",const bool& reminded = false);
 
     /**
      * @brief 获取任务ID
@@ -61,8 +61,12 @@ public:
      */
     std::string getReminderTime() const { return TimeUtils::formatTime(reminderTime); };
 
+    bool &getremind() { return reminded; }
+
+    bool getremind_const() const{ return reminded; }
+
     void printself() const;
-    bool reminded;
+   
 
 private:
     int id;                                             ///< 任务ID
@@ -71,7 +75,7 @@ private:
     std::chrono::system_clock::time_point reminderTime; ///< 提醒时间
     std::string priority;                               ///< 任务优先级
     std::string category;                               ///< 任务分类
-    
+    bool reminded;                                      ///< 是否已经提醒
 };
 
 #endif // TASK_H

@@ -32,10 +32,12 @@ void Reminder::checkReminders()
     {
         auto remindTime = TimeUtils::parseTime(task.getReminderTime());
         auto startTime = TimeUtils::parseTime(task.getStartTime());
-        if (!task.reminded&&remindTime <= now && remindTime <= startTime && now + std::chrono::seconds(10) > remindTime) //10s 提前量
+        if (!task.getremind()&&remindTime <= now && remindTime <= startTime && now + std::chrono::seconds(2) > remindTime) //2s 提前量
         {
-            task.reminded = true;
-            std::cout << "REMIND!!\n";
+            task.getremind() = true;
+            taskManager.deleteTask(task.getId());
+            taskManager.addTask(task);
+            std::cout << "\nREMIND!!\n";
             task.printself();
             std::cout << "IS TO START SOON!\n";
         }

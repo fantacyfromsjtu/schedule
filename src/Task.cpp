@@ -10,7 +10,7 @@
  */
 Task::Task(int id, const std::string &name, const std::string &startTime,
            const std::string &priority, const std::string &category,
-           const std::string &reminderTime)
+           const std::string &reminderTime,const bool &reminded)
 {
     this->id = id;
     this->name = name;
@@ -24,7 +24,7 @@ Task::Task(int id, const std::string &name, const std::string &startTime,
     else{
         this->reminderTime = this->startTime;
     }
-    this->reminded = false;
+    this->reminded = reminded;
 }
 
 void Task::printself() const
@@ -39,4 +39,5 @@ void Task::printself() const
     std::cout << std::setw(width) << "Priority:" << priority << std::endl;
     std::cout << std::setw(width) << "Category:" << category << std::endl;
     std::cout << std::setw(width) << "Reminder Time:" << getReminderTime() << std::endl;
+    std::cout << std::endl;
 }

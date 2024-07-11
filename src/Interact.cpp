@@ -1,4 +1,8 @@
 #include "Interact.h"
+#include <iostream>
+#include <string>
+#include <termios.h>
+#include <unistd.h>
 #include <limits>
 
 void showHelp()
@@ -39,8 +43,22 @@ void ask_name_passwd(std::string &username, std::string &password)
 {
     std::cout << "用户名:\n";
     std::cin >> username;
+
     std::cout << "密码:\n";
+
+    // 禁用回显
+    termios oldt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    termios newt = oldt;
+    newt.c_lflag &= ~ECHO;
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
     std::cin >> password;
+
+    // 恢复回显
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+
+    std::cout << std::endl; // 换行
 }
 
 void ask_del(TaskManager &usermanager)
@@ -71,10 +89,14 @@ void ask_show(TaskManager &usermanager)
 {
     std::string month;
     std::string day;
+
+    // 清除输入缓冲区
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     std::cout << "查看任务的月份：(可以跳过，默认为当月)";
-    std::getline(std::cin >> std::ws, month);
+    std::getline(std::cin, month);
     std::cout << "查看任务的日期：(可以跳过，默认为当天)";
-    std::getline(std::cin >> std::ws, day);
+    std::getline(std::cin, day);
     if (!usermanager.showTask(month, day))
     {
         std::cout << "查看的时间段内无任务！\n";
@@ -86,11 +108,14 @@ void ask_add(TaskManager &usermanager)
     std::cout << "新建任务的各属性（按回车默认跳过）\n";
     std::string name, startTime, priority, category, remindTime;
 
+    // 清除输入缓冲区
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
     std::cout << "任务名：\n";
-    std::getline(std::cin >> std::ws, name);
+    std::getline(std::cin, name);
 
     std::cout << "任务开始时间（格式为YYYY-MM-DD HH:MM:SS）：\n";
-    std::getline(std::cin >> std::ws, startTime);
+    std::getline(std::cin, startTime);
     if (!usermanager.isValidStartTime(startTime))
     {
         std::cout << "启动时间非法！\n";
@@ -98,7 +123,7 @@ void ask_add(TaskManager &usermanager)
     }
 
     std::cout << "优先级（默认为medium）：\n";
-    std::cin >> priority;
+    std::getline(std::cin, priority);
     if (priority.empty())
     {
         priority = "medium";
@@ -110,7 +135,7 @@ void ask_add(TaskManager &usermanager)
     }
 
     std::cout << "任务种类（默认为other）：\n";
-    std::getline(std::cin >> std::ws, category);
+    std::getline(std::cin, category);
     if (category.empty())
     {
         category = "other";
@@ -121,8 +146,8 @@ void ask_add(TaskManager &usermanager)
         return;
     }
 
-    std::cout << "任务提醒时间（默认为空）：\n";
-    std::getline(std::cin >> std::ws, remindTime);
+    std::cout << "任务提醒时间（默认为任务开始时间）：\n";
+    std::getline(std::cin, remindTime);
     if (!remindTime.empty() && !usermanager.isValidRemindTime(remindTime, startTime))
     {
         std::cout << "提醒时间非法！\n";

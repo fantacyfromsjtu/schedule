@@ -3,14 +3,12 @@
 #include <iomanip>
 #include <sstream>
 #include <regex>
-
-const int SECONDS_PER_HOUR = 3600;
-const int EASTERN_8_OFFSET = 8 * SECONDS_PER_HOUR;
+#include <iostream>
 
 std::string TimeUtils::getCurrentDate()
 {
-    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) + EASTERN_8_OFFSET;
-    std::tm localTime = *std::gmtime(&now); // 使用 gmtime 将时间转换为 UTC 时间
+    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::tm localTime = *std::localtime(&now);
     std::ostringstream oss;
     oss << std::put_time(&localTime, "%Y-%m-%d");
     return oss.str();
@@ -18,8 +16,8 @@ std::string TimeUtils::getCurrentDate()
 
 std::string TimeUtils::getCurrentMonth()
 {
-    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) + EASTERN_8_OFFSET;
-    std::tm localTime = *std::gmtime(&now);
+    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::tm localTime = *std::localtime(&now);
     std::ostringstream oss;
     oss << std::put_time(&localTime, "%Y-%m");
     return oss.str();
@@ -27,8 +25,8 @@ std::string TimeUtils::getCurrentMonth()
 
 std::string TimeUtils::getCurrentTime()
 {
-    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) + EASTERN_8_OFFSET;
-    std::tm localTime = *std::gmtime(&now);
+    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::tm localTime = *std::localtime(&now);
     std::ostringstream oss;
     oss << std::put_time(&localTime, "%Y-%m-%d %H:%M:%S");
     return oss.str();
@@ -59,6 +57,7 @@ std::chrono::system_clock::time_point TimeUtils::parseTime(const std::string &ti
     }
     else
     {
+        std::cerr << "Invalid time format: " << timeStr << std::endl;
         throw std::invalid_argument("Invalid time format");
     }
 
@@ -67,15 +66,14 @@ std::chrono::system_clock::time_point TimeUtils::parseTime(const std::string &ti
         throw std::invalid_argument("Failed to parse time");
     }
 
-    // 调整为东八区时间
-    std::time_t timeT = std::mktime(&tm);
-    return std::chrono::system_clock::from_time_t(timeT - EASTERN_8_OFFSET);
+    // 不进行时区转换，直接返回本地时间
+    return std::chrono::system_clock::from_time_t(std::mktime(&tm));
 }
 
 std::string TimeUtils::formatTime(const std::chrono::system_clock::time_point &timePoint)
 {
-    std::time_t timeT = std::chrono::system_clock::to_time_t(timePoint) + EASTERN_8_OFFSET;
-    std::tm tm = *std::gmtime(&timeT);
+    std::time_t timeT = std::chrono::system_clock::to_time_t(timePoint);
+    std::tm tm = *std::localtime(&timeT);
     std::ostringstream oss;
     oss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
     return oss.str();
@@ -91,10 +89,10 @@ bool TimeUtils::isValidTime(const std::string &timeStr)
 
 std::tm TimeUtils::getLocalTime()
 {
-    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now()) + EASTERN_8_OFFSET;
+    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
     std::tm localTime;
 #ifdef _WIN32
-    gmtime_s(&localTime, &now);
+    localtime_s(&localTime, &now);
 #else
     localtime_r(&now, &localTime);
 #endif
