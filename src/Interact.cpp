@@ -1,4 +1,5 @@
 #include "Interact.h"
+#include "Utils.h"
 #include <iostream>
 #include <string>
 #include <termios.h>
@@ -7,36 +8,67 @@
 
 void showHelp()
 {
-    std::cout << "\nUsage:\n";
+    Utils::printSeparator();
+    Utils::setColor("36"); // Cyan
+    Utils::printBold("Usage:\n");
+    Utils::resetColor();
     std::cout << "  myschedule <command>\n";
-    std::cout << "Commands:\n";
+
+    Utils::setColor("36"); // Cyan
+    Utils::printBold("Commands:\n");
+    Utils::resetColor();
     std::cout << "  run        - 启动日程管理系统\n";
     std::cout << "  -h         - 显示帮助信息\n";
-    std::cout << "\n在启动日程管理系统后，可用的命令有:\n";
+
+    Utils::printSeparator();
+    Utils::setColor("36"); // Cyan
+    Utils::printBold("在启动日程管理系统后，可用的命令有:\n");
+    Utils::resetColor();
     std::cout << "  addtask    - 添加任务\n";
     std::cout << "  deltask    - 删除任务\n";
     std::cout << "  showtask   - 显示任务\n";
     std::cout << "  q          - 退出系统\n";
-    std::cout << "\n命令示例:\n";
+
+    Utils::printSeparator();
+    Utils::setColor("36"); // Cyan
+    Utils::printBold("命令示例:\n");
+    Utils::resetColor();
     std::cout << "  myschedule run                - 启动日程管理系统\n";
     std::cout << "  addtask                       - 添加一个新任务\n";
     std::cout << "  deltask                       - 删除一个任务\n";
     std::cout << "  showtask                      - 显示任务\n";
     std::cout << "  q                             - 退出系统\n";
-    std::cout << "\n在系统启动后:\n";
+
+    Utils::printSeparator();
+    Utils::setColor("36"); // Cyan
+    Utils::printBold("在系统启动后:\n");
+    Utils::resetColor();
     std::cout << "  注册或登录后，您可以添加、删除或显示任务。\n";
-    std::cout << "\n添加任务的详细步骤:\n";
+
+    Utils::printSeparator();
+    Utils::setColor("36"); // Cyan
+    Utils::printBold("添加任务的详细步骤:\n");
+    Utils::resetColor();
     std::cout << "  1. 输入任务名称。\n";
     std::cout << "  2. 输入任务开始时间（格式为YYYY-MM-DD HH:MM:SS）。\n";
     std::cout << "  3. 输入任务优先级（按回车默认medium）。\n";
     std::cout << "  4. 输入任务种类（按回车默认other）。\n";
-    std::cout << "  5. 输入任务提醒时间（按回车默认空）。\n";
-    std::cout << "\n删除任务的详细步骤:\n";
+    std::cout << "  5. 输入任务提醒时间（按回车默认为任务开始时间）。\n";
+
+    Utils::printSeparator();
+    Utils::setColor("36"); // Cyan
+    Utils::printBold("删除任务的详细步骤:\n");
+    Utils::resetColor();
     std::cout << "  1. 输入要删除的任务ID。\n";
     std::cout << "  2. 确认是否删除任务（y/n）。\n";
-    std::cout << "\n显示任务的详细步骤:\n";
+
+    Utils::printSeparator();
+    Utils::setColor("36"); // Cyan
+    Utils::printBold("显示任务的详细步骤:\n");
+    Utils::resetColor();
     std::cout << "  1. 输入要查看任务的月份（按回车默认当月）。\n";
-    std::cout << "  2. 输入要查看任务的日期（按回车默认当天）。\n";
+    std::cout << "  2. 输入要查看任务的日期（按回车默认显示当月所有天）。\n";
+    Utils::printSeparator();
 }
 
 void ask_name_passwd(std::string &username, std::string &password)
@@ -77,6 +109,7 @@ void ask_del(TaskManager &usermanager)
     std::cin >> yorn;
     if (yorn == 'y' || yorn == 'Y')
     {
+        std::lock_guard<std::mutex> lock(Utils::mtx); // 加锁
         bool isdel = usermanager.deleteTask(id);
         if (!isdel)
         {
@@ -100,6 +133,7 @@ void ask_show(TaskManager &usermanager)
     std::getline(std::cin, month);
     std::cout << "查看任务的日期(格式：两位数字)：(可以跳过，默认显示每一天)";
     std::getline(std::cin, day);
+    std::lock_guard<std::mutex> lock(Utils::mtx); // 加锁
     if (!usermanager.showTask(month, day))
     {
         std::cout << "查看的时间段内无任务！\n";
@@ -159,6 +193,7 @@ void ask_add(TaskManager &usermanager)
 
     int id = usermanager.getTasknum() + 1;
     Task newtask(id, name, startTime, priority, category, remindTime);
+    std::lock_guard<std::mutex> lock(Utils::mtx); // 加锁
     if (usermanager.addTask(newtask))
     {
         std::cout << "添加任务 " << newtask.getName() << " 成功！\n";

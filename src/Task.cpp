@@ -1,4 +1,5 @@
 #include "Task.h"
+#include "Utils.h"
 /**
  * @brief 构造函数，初始化任务属性
  * @param id 任务ID
@@ -29,15 +30,28 @@ Task::Task(int id, const std::string &name, const std::string &startTime,
 
 void Task::printself() const
 {
-    // 定义每列的宽度
     const int width = 15;
 
     std::cout << std::left; // 左对齐
+
+    Utils::setColor("31"); // Red
     std::cout << std::setw(width) << "Task ID:" << id << std::endl;
+
+    Utils::setColor("32"); // Green
     std::cout << std::setw(width) << "Name:" << name << std::endl;
+
+    Utils::setColor("33"); // Yellow
     std::cout << std::setw(width) << "Start Time:" << getStartTime() << std::endl;
+
+    Utils::setColor("34"); // Blue
     std::cout << std::setw(width) << "Priority:" << priority << std::endl;
+
+    Utils::setColor("35"); // Magenta
     std::cout << std::setw(width) << "Category:" << category << std::endl;
+
+    Utils::setColor("36"); // Cyan
     std::cout << std::setw(width) << "Reminder Time:" << getReminderTime() << std::endl;
-    std::cout << std::endl;
+
+    Utils::resetColor(); // Reset to default color
+    Utils::printSeparator();
 }

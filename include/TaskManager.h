@@ -69,7 +69,7 @@ public:
     bool isValidStartTime(const std::string &startTime);
 
     bool isValidRemindTime(const std::string &remindTime, const std::string &startTime);
-    mutable std::mutex mtx; // 保护任务列表的互斥锁
+   
 
 private:
     std::string taskfile; //该任务管理器对应的文件名

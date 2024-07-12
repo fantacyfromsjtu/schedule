@@ -23,7 +23,7 @@ TaskManager::TaskManager(std::string username)
 bool TaskManager::addTask(const Task &task)
 {
     { //在单个作用域
-        std::lock_guard<std::mutex> lock(mtx);
+        //std::lock_guard<std::mutex> lock(mtx);
         tasks.push_back(task);
     }
     return saveTasks(task, taskfile);
@@ -36,7 +36,7 @@ bool TaskManager::addTask(const Task &task)
 bool TaskManager::deleteTask(int id)
 
 {
-    std::lock_guard<std::mutex> lock(mtx);
+    //std::lock_guard<std::mutex> lock(mtx);
     auto it = std::find_if(tasks.begin(), tasks.end(), [id](const Task &task)
                            { return task.getId() == id; });
     if (it == tasks.end())
@@ -88,7 +88,7 @@ bool TaskManager::deleteTask(int id)
  */
 void TaskManager::loadTasks(const std::string &filename)
 {
-    std::lock_guard<std::mutex> lock(mtx);
+    //std::lock_guard<std::mutex> lock(mtx);
     std::ifstream taskfile(filename);
     if (!taskfile)
     {
@@ -137,7 +137,7 @@ void TaskManager::loadTasks(const std::string &filename)
  */
 bool TaskManager::saveTasks(const Task &task, const std::string &filename) const
 {
-    std::lock_guard<std::mutex> lock(mtx);
+    //std::lock_guard<std::mutex> lock(mtx);
     std::ofstream taskFile(filename, std::ios::app);
     if (taskFile.is_open())
     {
@@ -161,7 +161,7 @@ bool TaskManager::saveTasks(const Task &task, const std::string &filename) const
  */
 bool TaskManager::showTask(const std::string &month, const std::string &day)
 {
-    std::lock_guard<std::mutex> lock(mtx);
+    //std::lock_guard<std::mutex> lock(mtx);
     sort_by_startTime();
     std::string targetmonth;
     std::string targetdate;
@@ -239,7 +239,7 @@ bool TaskManager::isValidStartTime(const std::string &startTime)
 
     // 检查启动时间是否唯一
     auto newStartTime = TimeUtils::parseTime(startTime);
-    std::lock_guard<std::mutex> lock(mtx);
+    //std::lock_guard<std::mutex> lock(mtx);
     for (const auto &task : tasks)
     {
         if (TimeUtils::parseTime(task.getStartTime()) == newStartTime)

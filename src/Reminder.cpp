@@ -1,4 +1,5 @@
 #include "Reminder.h"
+#include "Utils.h"
 #include <iostream>
 #include <ctime>
 
@@ -29,20 +30,24 @@ void Reminder::checkReminders()
 {
 
     auto now = TimeUtils::parseTime(TimeUtils::getCurrentTime());
-   
+    std::lock_guard<std::mutex> lock(Utils::mtx); //加锁 
     for (auto &task : taskManager.getTasks())
     {
         auto remindTime = TimeUtils::parseTime(task.getReminderTime());
         auto startTime = TimeUtils::parseTime(task.getStartTime());
-        //std::lock_guard<std::mutex> lock(taskManager.mtx);                                                                               // 获取锁，保护任务列表
+                                                                            // 获取锁，保护任务列表
         if (!task.getremind()&&remindTime <= now && remindTime <= startTime && now + std::chrono::seconds(2) > remindTime) //2s 提前量
         {
             task.getremind() = true;
             taskManager.deleteTask(task.getId());
             taskManager.addTask(task);
+            Utils::setColor("1"); // Bold
             std::cout << "\nREMIND!!\n";
+            Utils::resetColor();
             task.printself();
+            Utils::setColor("1"); // Bold
             std::cout << "IS TO START SOON!\n";
+            Utils::resetColor();
         }
     }
 }
