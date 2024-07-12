@@ -82,6 +82,9 @@ void ask_del(TaskManager &usermanager)
         {
             std::cerr << "要删除的任务不存在！\n";
         }
+        else{
+            std::cout << "删除ID为:" << id << "的任务成功！\n";
+        }
     }
 }
 
@@ -93,9 +96,9 @@ void ask_show(TaskManager &usermanager)
     // 清除输入缓冲区
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    std::cout << "查看任务的月份：(可以跳过，默认为当月)";
+    std::cout << "查看任务的月份(格式：两位数字)：(可以跳过，默认为当月)";
     std::getline(std::cin, month);
-    std::cout << "查看任务的日期：(可以跳过，默认为当天)";
+    std::cout << "查看任务的日期(格式：两位数字)：(可以跳过，默认显示每一天)";
     std::getline(std::cin, day);
     if (!usermanager.showTask(month, day))
     {

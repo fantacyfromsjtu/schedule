@@ -27,11 +27,14 @@ void Reminder::stop()
 
 void Reminder::checkReminders()
 {
+
     auto now = TimeUtils::parseTime(TimeUtils::getCurrentTime());
+   
     for (auto &task : taskManager.getTasks())
     {
         auto remindTime = TimeUtils::parseTime(task.getReminderTime());
         auto startTime = TimeUtils::parseTime(task.getStartTime());
+        //std::lock_guard<std::mutex> lock(taskManager.mtx);                                                                               // 获取锁，保护任务列表
         if (!task.getremind()&&remindTime <= now && remindTime <= startTime && now + std::chrono::seconds(2) > remindTime) //2s 提前量
         {
             task.getremind() = true;

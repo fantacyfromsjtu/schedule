@@ -5,6 +5,7 @@
 
 TaskManager::TaskManager(std::string username)
 {
+
     this->taskfile = Utils::getTaskFile(username);
     this->prioritySet = {"high",
                          "medium",
@@ -13,12 +14,6 @@ TaskManager::TaskManager(std::string username)
                          "life",
                          "other"};
     this->tasks = std::vector<Task>();
-
-    std::ifstream file(this->taskfile);
-    if (file.good()) // 检查文件是否存在
-    {
-        loadTasks(taskfile);
-    }
 }
 /**
  * @brief 添加任务
@@ -27,20 +22,21 @@ TaskManager::TaskManager(std::string username)
  */
 bool TaskManager::addTask(const Task &task)
 {
-    tasks.push_back(task);
-    if (saveTasks(task, taskfile))
-        return true;
-    else
-        return false;
+    { //在单个作用域
+        std::lock_guard<std::mutex> lock(mtx);
+        tasks.push_back(task);
+    }
+    return saveTasks(task, taskfile);
 }
-
 /**
  * @brief 删除任务
  * @param id 要删除的任务ID
  * @return 成功删除返回true，否则返回false
  */
 bool TaskManager::deleteTask(int id)
+
 {
+    std::lock_guard<std::mutex> lock(mtx);
     auto it = std::find_if(tasks.begin(), tasks.end(), [id](const Task &task)
                            { return task.getId() == id; });
     if (it == tasks.end())
@@ -92,6 +88,7 @@ bool TaskManager::deleteTask(int id)
  */
 void TaskManager::loadTasks(const std::string &filename)
 {
+    std::lock_guard<std::mutex> lock(mtx);
     std::ifstream taskfile(filename);
     if (!taskfile)
     {
@@ -140,6 +137,7 @@ void TaskManager::loadTasks(const std::string &filename)
  */
 bool TaskManager::saveTasks(const Task &task, const std::string &filename) const
 {
+    std::lock_guard<std::mutex> lock(mtx);
     std::ofstream taskFile(filename, std::ios::app);
     if (taskFile.is_open())
     {
@@ -163,32 +161,57 @@ bool TaskManager::saveTasks(const Task &task, const std::string &filename) const
  */
 bool TaskManager::showTask(const std::string &month, const std::string &day)
 {
+    std::lock_guard<std::mutex> lock(mtx);
     sort_by_startTime();
-    std::string targetmonth = month;
-    std::string targetdate = day;
+    std::string targetmonth;
+    std::string targetdate;
     if (month.empty())
     {
         targetmonth = TimeUtils::getCurrentMonth();
+    }
+    else
+    {
+        targetmonth = TimeUtils::getCurrentYear() + "-" + month;
+        if (!TimeUtils::isValidDate(targetmonth + "-01"))
+        {
+            std::cerr << "输入月份非法！\n";
+            return false;
+        }
     }
     if (day.empty())
     {
         targetdate = TimeUtils::getCurrentDate();
     }
+    else
+    {
+        targetdate = TimeUtils::getCurrentMonth() + "-" + day;
+        if (!TimeUtils::isValidDate(targetdate))
+        {
+            std::cerr << "输入日期非法！\n";
+            return false;
+        }
+    }
+    // std::cout << "targetmonth:" << targetmonth << std::endl;
+    // std::cout << "targetdate:" << targetdate << std::endl;
     bool found = false;
     for (const auto &task : tasks)
     {
         std::string taskDate = task.getStartTime().substr(0, 10); // starttime格式为YYYY-MM-DD HH:MM:SS
+        // std::cout << "taskdate:" << taskDate << std::endl;
         std::string taskMonth = task.getStartTime().substr(0, 7);
+        // std::cout << "taskmonth:" << taskMonth << std::endl;
         if (!day.empty() && taskDate == targetdate)
         {
             // 显示具体日期的任务
             task.printself();
+            // std::cout << "callday\n!";
             found = true;
         }
         else if (day.empty() && taskMonth == targetmonth)
         {
             // 显示整个月份的任务
             task.printself();
+            // std::cout << "callmonth\n!";
             found = true;
         }
     }
@@ -216,6 +239,7 @@ bool TaskManager::isValidStartTime(const std::string &startTime)
 
     // 检查启动时间是否唯一
     auto newStartTime = TimeUtils::parseTime(startTime);
+    std::lock_guard<std::mutex> lock(mtx);
     for (const auto &task : tasks)
     {
         if (TimeUtils::parseTime(task.getStartTime()) == newStartTime)

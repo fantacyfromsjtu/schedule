@@ -5,6 +5,7 @@
 #include <chrono>
 #include <thread>
 #include <atomic>
+#include <mutex>
 #include "Task.h"
 #include "TaskManager.h"
 #include "TimeUtils.h"
@@ -32,6 +33,7 @@ private:
     TaskManager &taskManager; ///< 任务管理器的引用
     std::atomic<bool> running;      ///< 控制线程运行的标志
     std::thread reminderThread;     ///< 提醒线程
+
 
     /**
      * @brief 检查任务是否需要提醒

@@ -5,6 +5,14 @@
 #include <regex>
 #include <iostream>
 
+std::string TimeUtils::getCurrentYear()
+{
+    std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+    std::tm localTime = *std::localtime(&now);
+    std::ostringstream oss;
+    oss << std::put_time(&localTime, "%Y");
+    return oss.str();
+}
 std::string TimeUtils::getCurrentDate()
 {
     std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
@@ -66,7 +74,7 @@ std::chrono::system_clock::time_point TimeUtils::parseTime(const std::string &ti
         throw std::invalid_argument("Failed to parse time");
     }
 
-    // 不进行时区转换，直接返回本地时间
+
     return std::chrono::system_clock::from_time_t(std::mktime(&tm));
 }
 

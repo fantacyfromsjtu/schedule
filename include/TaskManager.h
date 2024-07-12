@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 #include <unordered_set>
-
+#include <mutex>
 class User; // 前向声明
 /**
  * @brief 任务管理类，管理任务的添加、删除、显示等操作
@@ -69,12 +69,14 @@ public:
     bool isValidStartTime(const std::string &startTime);
 
     bool isValidRemindTime(const std::string &remindTime, const std::string &startTime);
+    mutable std::mutex mtx; // 保护任务列表的互斥锁
 
 private:
     std::string taskfile; //该任务管理器对应的文件名
     std::vector<Task> tasks; ///< 任务列表
     std::unordered_set<std::string> prioritySet ;
     std::unordered_set<std::string> categorySet;
+    
     void sort_by_startTime();
 };
 

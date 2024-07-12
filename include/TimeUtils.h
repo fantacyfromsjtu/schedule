@@ -11,6 +11,11 @@ class TimeUtils
 {
 public:
     /**
+     * @brief 获取当前年份
+     * @return 返回当前年份字符串（格式为YYYY）
+     */
+    static std::string getCurrentYear();
+    /**
      * @brief 获取当前日期
      * @return 返回当前日期字符串（格式为YYYY-MM-DD）
      */
