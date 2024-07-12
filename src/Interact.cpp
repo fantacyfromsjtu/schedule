@@ -7,6 +7,9 @@
 #include <unistd.h>
 #include <limits>
 
+/**
+ * @brief 显示帮助信息
+ */
 void showHelp()
 {
     Utils::printSeparator();
@@ -69,10 +72,14 @@ void showHelp()
     Utils::printBold("显示任务的详细步骤:\n");
     Utils::resetColor();
     std::cout << "  1. 输入要查看任务的月份（按回车默认当月）。\n";
-    std::cout << "  2. 输入要查看任务的日期（按回车默认显示当月所有天）。\n";
+    std::cout << "  2. 输入要查看任务的日期（按回车默认显示每一天）。\n";
     Utils::printSeparator();
 }
 
+/**
+ * @brief 输入密码时禁用回显
+ * @param password 用于存储输入的密码
+ */
 void cinpasswd(std::string &password)
 {
     // 禁用回显
@@ -88,6 +95,11 @@ void cinpasswd(std::string &password)
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 }
 
+/**
+ * @brief 询问用户名和密码
+ * @param username 用于存储输入的用户名
+ * @param password 用于存储输入的密码
+ */
 void ask_name_passwd(std::string &username, std::string &password)
 {
     std::cout << "用户名:\n";
@@ -97,6 +109,10 @@ void ask_name_passwd(std::string &username, std::string &password)
     std::cout << std::endl; // 换行
 }
 
+/**
+ * @brief 询问并删除任务
+ * @param usermanager 任务管理器对象
+ */
 void ask_del(TaskManager &usermanager)
 {
     std::cout << "输入要删除的任务id：\n";
@@ -126,6 +142,10 @@ void ask_del(TaskManager &usermanager)
     }
 }
 
+/**
+ * @brief 询问并显示任务
+ * @param usermanager 任务管理器对象
+ */
 void ask_show(TaskManager &usermanager)
 {
     std::string month;
@@ -145,6 +165,10 @@ void ask_show(TaskManager &usermanager)
     }
 }
 
+/**
+ * @brief 询问并添加任务
+ * @param usermanager 任务管理器对象
+ */
 void ask_add(TaskManager &usermanager)
 {
     std::cout << "新建任务的各属性（按回车默认跳过）\n";
@@ -208,6 +232,11 @@ void ask_add(TaskManager &usermanager)
         std::cerr << "添加任务 " << newtask.getName() << " 失败\n";
     }
 }
+
+/**
+ * @brief 询问并修改用户密码
+ * @param user 用户对象
+ */
 void ask_modifypassword(User &user)
 {
     std::cout << "修改密码界面\n";

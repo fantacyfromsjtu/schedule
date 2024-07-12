@@ -1,31 +1,33 @@
 #include "TaskManager.h"
 #include <iostream>
 #include <algorithm>
-// 构造函数
 
+// 构造函数
 TaskManager::TaskManager(std::string username)
 {
     this->taskfile = Utils::getTaskFile(username);
-    this->prioritySet = {"high",
-                         "medium",
-                         "low"};
-    this->categorySet = {"study",
-                         "work",
-                         "life",
-                         "other"};
+    this->prioritySet = {"high", "medium", "low"};
+    this->categorySet = {"study", "work", "life", "other"};
     this->tasks = std::vector<Task>();
 }
 
+/**
+ * @brief 获取新任务ID
+ * @return 返回新的任务ID
+ */
 int TaskManager::getNewId() const
 {
     int maxid = 0;
-    for (const auto &task :tasks){
-        if(task.getId() > maxid){
+    for (const auto &task : tasks)
+    {
+        if (task.getId() > maxid)
+        {
             maxid = task.getId();
         }
     }
     return maxid + 1;
 }
+
 /**
  * @brief 添加任务
  * @param task 要添加的任务
@@ -33,17 +35,16 @@ int TaskManager::getNewId() const
  */
 bool TaskManager::addTask(const Task &task)
 {
-
     tasks.push_back(task);
     return saveTasks(task, taskfile);
 }
+
 /**
  * @brief 删除任务
  * @param id 要删除的任务ID
  * @return 成功删除返回true，否则返回false
  */
 bool TaskManager::deleteTask(int id)
-
 {
     auto it = std::find_if(tasks.begin(), tasks.end(), [id](const Task &task)
                            { return task.getId() == id; });
@@ -217,16 +218,31 @@ bool TaskManager::showTask(const std::string &month, const std::string &day)
     return found;
 }
 
+/**
+ * @brief 验证优先级是否合法
+ * @param priority 优先级
+ * @return 合法返回true，否则返回false
+ */
 bool TaskManager::isValidPriority(const std::string &priority)
 {
     return this->prioritySet.count(priority) != 0;
 }
 
+/**
+ * @brief 验证任务分类是否合法
+ * @param category 分类
+ * @return 合法返回true，否则返回false
+ */
 bool TaskManager::isValidCategory(const std::string &category)
 {
     return this->categorySet.count(category) != 0;
 }
 
+/**
+ * @brief 验证任务开始时间是否合法且唯一
+ * @param startTime 开始时间
+ * @return 合法且唯一返回true，否则返回false
+ */
 bool TaskManager::isValidStartTime(const std::string &startTime)
 {
     // 先检查时间格式和是否在当前时间之后
@@ -249,6 +265,12 @@ bool TaskManager::isValidStartTime(const std::string &startTime)
     return true;
 }
 
+/**
+ * @brief 验证提醒时间是否合法
+ * @param remindTime 提醒时间
+ * @param startTime 开始时间
+ * @return 合法返回true，否则返回false
+ */
 bool TaskManager::isValidRemindTime(const std::string &remindTime, const std::string &startTime)
 {
     if (TimeUtils::isValidTime(remindTime) &&
@@ -259,6 +281,9 @@ bool TaskManager::isValidRemindTime(const std::string &remindTime, const std::st
     return false;
 }
 
+/**
+ * @brief 按开始时间排序任务
+ */
 void TaskManager::sort_by_startTime()
 {
     std::sort(tasks.begin(), tasks.end(), [](const Task &a, const Task &b)

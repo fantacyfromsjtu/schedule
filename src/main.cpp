@@ -9,10 +9,17 @@
 #include "Reminder.h"
 #include "TimeUtils.h"
 
+// 函数声明
 void handleUserRegistration(std::string &username, std::string &password);
 bool handleUserLogin(std::string &username, std::string &password);
 void mainLoop(User &user);
 
+/**
+ * @brief 主函数，程序入口
+ * @param argc 参数个数
+ * @param argv 参数列表
+ * @return 程序执行状态码
+ */
 int main(int argc, char *argv[])
 {
     if (argc != 2)
@@ -66,6 +73,11 @@ int main(int argc, char *argv[])
     }
 }
 
+/**
+ * @brief 处理用户注册流程
+ * @param username 用户名
+ * @param password 密码
+ */
 void handleUserRegistration(std::string &username, std::string &password)
 {
     while (true)
@@ -85,6 +97,12 @@ void handleUserRegistration(std::string &username, std::string &password)
     }
 }
 
+/**
+ * @brief 处理用户登录流程
+ * @param username 用户名
+ * @param password 密码
+ * @return 登录成功返回 true，否则返回 false
+ */
 bool handleUserLogin(std::string &username, std::string &password)
 {
     std::cout << "登录界面\n";
@@ -101,6 +119,10 @@ bool handleUserLogin(std::string &username, std::string &password)
     }
 }
 
+/**
+ * @brief 主循环，处理用户的各种命令
+ * @param user 用户对象
+ */
 void mainLoop(User &user)
 {
     TaskManager &user_manager = user.manager;
@@ -133,7 +155,8 @@ void mainLoop(User &user)
         {
             ask_add(user_manager);
         }
-        else if (command == "modifypassword"){
+        else if (command == "modifypassword")
+        {
             ask_modifypassword(user);
         }
         else if (command == "q")

@@ -1,12 +1,21 @@
+// Utils.cpp
+// 实用工具函数的实现
+
 #include "Utils.h"
 #include <openssl/evp.h>
 #include <sstream>
 #include <iomanip>
+
 namespace Utils
 {
-    std::mutex mtx;
-    std::string
-    sha256(const std::string &str)
+    std::mutex mtx; // 定义全局互斥锁，用于线程同步
+
+    /**
+     * @brief 生成字符串的SHA256哈希值
+     * @param str 输入字符串
+     * @return SHA256哈希值
+     */
+    std::string sha256(const std::string &str)
     {
         unsigned char hash[EVP_MAX_MD_SIZE];
         unsigned int lengthOfHash = 0;
@@ -28,8 +37,13 @@ namespace Utils
         return ss.str();
     }
 
+    /**
+     * @brief 将字符串转换为整数
+     * @param str 要转换的字符串
+     * @return 转换后的整数，如果转换失败返回-1
+     */
     int stringToInt(const std::string &str)
-    { // 一个安全的字符串转整数函数，如果不是合法字符串，返回-1
+    {
         if (str.empty())
         {
             return -1;
@@ -52,25 +66,45 @@ namespace Utils
         return static_cast<int>(result);
     }
 
+    /**
+     * @brief 获取任务文件的路径
+     * @param username 用户名
+     * @return 任务文件路径
+     */
     std::string getTaskFile(const std::string &username)
     {
         return "../data/tasks/" + username + "_task.txt";
     }
 
+    /**
+     * @brief 设置终端输出颜色
+     * @param colorCode 颜色代码
+     */
     void setColor(const std::string &colorCode)
     {
         std::cout << "\033[" << colorCode << "m";
     }
 
+    /**
+     * @brief 重置终端输出颜色
+     */
     void resetColor()
     {
         std::cout << "\033[0m";
     }
 
+    /**
+     * @brief 打印分割线
+     */
     void printSeparator()
     {
         std::cout << "------------------------------------------------------" << std::endl;
     }
+
+    /**
+     * @brief 打印加粗文本
+     * @param text 要打印的文本
+     */
     void printBold(const std::string &text)
     {
         std::cout << "\033[1m" << text << "\033[0m";

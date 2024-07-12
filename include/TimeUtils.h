@@ -1,3 +1,6 @@
+// TimeUtils.h
+// 提供时间处理的工具类
+
 #ifndef TIMEUTILS_H
 #define TIMEUTILS_H
 
@@ -15,6 +18,7 @@ public:
      * @return 返回当前年份字符串（格式为YYYY）
      */
     static std::string getCurrentYear();
+
     /**
      * @brief 获取当前日期
      * @return 返回当前日期字符串（格式为YYYY-MM-DD）
@@ -54,6 +58,11 @@ public:
      */
     static std::string formatTime(const std::chrono::system_clock::time_point &timePoint);
 
+    /**
+     * @brief 验证时间格式
+     * @param timeStr 输入时间字符串
+     * @return 格式正确返回true，否则返回false
+     */
     static bool isValidTime(const std::string &timeStr);
 
 private:

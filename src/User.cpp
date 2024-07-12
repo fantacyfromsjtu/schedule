@@ -1,17 +1,22 @@
+// User.cpp
+// 用户类实现文件，包含用户名、密码散列和任务管理器的相关操作
+
 #include "User.h"
 #include <fstream>
 #include <map>
 #include <iostream>
 
-//构造函数
+// 构造函数，初始化用户名和任务管理器
 User::User(const std::string &username, const std::string &passwordHash)
     : username(username), passwordHash(passwordHash), manager(username)
-{}
+{
+}
 
+// 用户数据文件路径
 const std::string usersfile = "../data/users.txt";
+
 // 读取用户文件并存储用户名和哈希值
-std::map<std::string, std::string>
-readUsers(const std::string &filename)
+std::map<std::string, std::string> readUsers(const std::string &filename)
 {
     std::map<std::string, std::string> users;
     std::ifstream file(filename);
@@ -27,19 +32,25 @@ readUsers(const std::string &filename)
     }
     return users;
 }
+
+// 注册函数，检查用户名是否存在，如果不存在则添加新用户并创建任务文件
 bool User::registeR()
 {
     // 读取现有用户
     std::map<std::string, std::string> users = readUsers(usersfile);
+
     // 检查用户名是否存在
     if (users.find(this->username) != users.end())
     {
         return false;
     }
-    // 是新用户，则更新users.txt，并且新建task/<username>_task_task.txt
+
+    // 添加新用户到users.txt
     std::ofstream file(usersfile, std::ios::app);
     file << this->username << " " << this->passwordHash << std::endl;
-    std::string taskFilename =Utils::getTaskFile(username);
+
+    // 创建任务文件
+    std::string taskFilename = Utils::getTaskFile(username);
     std::ofstream taskFile(taskFilename);
     if (taskFile.is_open())
     {
@@ -50,19 +61,25 @@ bool User::registeR()
         std::cerr << "Failed to create task file for user " << username << "." << std::endl;
         return false;
     }
+
     return true;
 }
 
+// 登录函数，检查用户名是否存在且密码是否正确
 bool User::login(const std::string &username, const std::string &passwordHash)
 {
     std::map<std::string, std::string> users = readUsers(usersfile);
+
+    // 检查用户名和密码
     if (users.find(username) == users.end() || users[username] != passwordHash)
     {
-        //用户名不存在或者密码错误
         return false;
     }
+
     return true;
 }
+
+// 修改密码函数，更新内存和文件中的密码散列
 bool User::modifyPassword(const std::string &newPasswd)
 {
     std::map<std::string, std::string> users = readUsers(usersfile);

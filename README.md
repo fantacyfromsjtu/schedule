@@ -1,77 +1,102 @@
-根据上述设计思路，这里是一个详细的文件目录结构，可以用于你的日程管理软件项目。该目录结构分为源代码、头文件、数据文件和其他辅助文件。
+# ScheduleManager 项目
 
-### 文件目录结构
+## 项目概要
+
+ScheduleManager 是一个基于命令行的任务管理系统，用户可以通过注册和登录来管理自己的任务。功能包括添加任务、删除任务、显示任务以及设置任务提醒。该项目采用 C++ 语言编写，并使用 CMake 构建，支持多线程和 OpenSSL 安全功能。
+
+## 项目结构
 
 ```
 ScheduleManager/
-├── src/
-│   ├── main.cpp                 # 主程序入口
-│   ├── User.cpp                 # User类实现
-│   ├── Task.cpp                 # Task类实现
-│   ├── TaskManager.cpp          # TaskManager类实现
-│   ├── Reminder.cpp             # Reminder类实现
-│   ├── Utils.cpp                # 辅助函数实现
-│   ├── TimeUtils.cpp            # 时间处理工具类实现
-|   |—— Interact.cpp             # 用户交互类的实现
-├── include/
-│   ├── User.h                   # User类定义
-│   ├── Task.h                   # Task类定义
-│   ├── TaskManager.h            # TaskManager类定义
-│   ├── Reminder.h               # Reminder类定义
-│   ├── Utils.h                  # 辅助函数定义
-│   ├── TimeUtils.h              # 时间处理工具类定义
-|   |—— Interact.h               # 用户交互类定义
-├── data/
-│   ├── users.txt                # 用户信息文件
-│   ├── tasks_user1.txt          # 用户1的任务文件
-│   └── tasks_user2.txt          # 用户2的任务文件
-├── CMakeLists.txt               # CMake构建文件
+├── bin/                         # 编译后的二进制文件目录
+├── cmake/                       # CMake 模块目录
+├── data/                        # 数据目录
+│   ├── users.txt                # 用户数据文件
+│   └── tasks/                   # 任务数据文件目录
+├── include/                     # 头文件目录
+│   ├── Interact.h
+│   ├── Reminder.h
+│   ├── Task.h
+│   ├── TaskManager.h
+│   ├── TimeUtils.h
+│   ├── User.h
+│   └── Utils.h
+├── src/                         # 源代码目录
+│   ├── Interact.cpp
+│   ├── main.cpp
+│   ├── Reminder.cpp
+│   ├── Task.cpp
+│   ├── TaskManager.cpp
+│   ├── TimeUtils.cpp
+│   ├── User.cpp
+│   └── Utils.cpp
+├── CMakeLists.txt               # CMake 构建文件
 └── README.md                    # 项目说明文件
-
 ```
 
-### 文件详细描述
+## 模块与类的设计
 
-#### `src/`
-- `main.cpp`：程序的入口文件，负责初始化和启动程序。
-- `User.cpp`：`User` 类的实现文件，包含用户注册、登录和密码加密等功能。
-- `Task.cpp`：`Task` 类的实现文件，包含任务属性的设置和获取方法。
-- `TaskManager.cpp`：`TaskManager` 类的实现文件，负责管理任务的增删改查和任务的持久化。
-- `Reminder.cpp`：`Reminder` 类的实现文件，负责多线程定期检查任务并提醒用户。
-- `Utils.cpp`：辅助函数的实现文件，如文件读写、字符串处理等。
+### 1. Interact 模块
+主要负责与用户的交互，包括显示帮助信息、添加任务、删除任务、显示任务和修改密码等操作。
 
-#### `include/`
-- `User.h`：`User` 类的头文件，定义了用户类的属性和方法。
-- `Task.h`：`Task` 类的头文件，定义了任务类的属性和方法。
-- `TaskManager.h`：`TaskManager` 类的头文件，定义了任务管理类的属性和方法。
-- `Reminder.h`：`Reminder` 类的头文件，定义了任务提醒类的属性和方法。
-- `Utils.h`：辅助函数的头文件，声明了各种实用工具函数。
+### 2. Reminder 模块
+负责定期检查任务的提醒时间，并在需要时提醒用户。
 
-#### `data/`
-- `users.txt`：保存用户信息的文件，包含用户名和加密后的密码。
-- `tasks_user1.txt`：保存用户1的任务信息。
-- `tasks_user2.txt`：保存用户2的任务信息。
+### 3. Task 模块
+表示单个任务，包含任务的属性如任务 ID、名称、开始时间、优先级、分类和提醒时间等。
 
-#### `CMakeLists.txt`
-- 用于项目的构建配置文件，包含编译选项和依赖关系。
+### 4. TaskManager 模块
+负责管理用户的任务，包括添加任务、删除任务、显示任务、加载和保存任务等操作。
 
-#### `README.md`
-- 项目的说明文件，提供项目简介、使用说明、开发者指南等。
+### 5. TimeUtils 模块
+提供处理时间的辅助函数，包括获取当前时间、验证时间格式和格式化时间等操作。
 
-### 项目构建和运行
+### 6. User 模块
+表示用户，包含用户名和密码散列，负责用户的注册、登录和修改密码等操作。
 
-在项目根目录下，可以使用CMake构建项目：
+### 7. Utils 模块
+提供通用的工具函数，包括字符串处理、SHA256 散列计算、控制台颜色设置和打印分割线等操作。
 
-```sh
+## 关键技术问题说明
+
+1. **多线程**：使用 `std::thread` 和 `std::mutex` 实现多线程任务提醒功能，确保在多线程环境下对任务列表的安全访问。
+2. **密码安全**：使用 OpenSSL 库的 SHA256 算法对用户密码进行散列处理，确保用户密码的安全存储和传输。
+3. **文件操作**：通过文件读写操作保存用户和任务数据，支持用户数据和任务数据的持久化存储。
+4. **时间处理**：通过 `TimeUtils` 模块提供的时间处理函数，支持任务的定时提醒和时间格式验证。
+
+## 运行方法
+
+### 1. 构建项目
+
+首先确保你的系统上已经安装了 CMake 和 OpenSSL 库，然后在项目根目录下运行以下命令构建项目：
+
+```bash
 mkdir build
 cd build
 cmake ..
 make
 ```
 
-生成的可执行文件将在 `build` 目录中。可以通过运行生成的可执行文件来启动程序：
+### 2. 运行项目
 
-```sh
+构建完成后，运行以下命令启动任务管理系统：
+
+```bash
 ./ScheduleManager run
 ```
 
+### 3. 使用项目
+
+启动后，系统会提示进行注册或登录。根据提示输入相应的命令即可进行任务的添加、删除、显示和修改密码等操作。
+
+### 4. 查看帮助信息
+
+在任何时候，可以通过输入 `-h` 查看帮助信息：
+
+```bash
+myschedule -h
+```
+
+## 结语
+
+ScheduleManager 是一个简单但功能丰富的任务管理系统，适用于需要进行日常任务管理的用户。项目采用模块化设计，方便扩展和维护。如果有任何问题或建议，欢迎联系开发者或提交 issue。

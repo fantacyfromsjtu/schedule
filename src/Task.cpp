@@ -1,5 +1,6 @@
 #include "Task.h"
 #include "Utils.h"
+
 /**
  * @brief 构造函数，初始化任务属性
  * @param id 任务ID
@@ -8,10 +9,11 @@
  * @param priority 任务优先级（默认中等）
  * @param category 任务分类（默认一般）
  * @param reminderTime 提醒时间（格式为YYYY-MM-DD HH:MM:SS）
+ * @param reminded 是否已经提醒
  */
 Task::Task(int id, const std::string &name, const std::string &startTime,
            const std::string &priority, const std::string &category,
-           const std::string &reminderTime,const bool &reminded)
+           const std::string &reminderTime, const bool &reminded)
 {
     this->id = id;
     this->name = name;
@@ -22,12 +24,16 @@ Task::Task(int id, const std::string &name, const std::string &startTime,
     {
         this->reminderTime = TimeUtils::parseTime(reminderTime);
     }
-    else{
+    else
+    {
         this->reminderTime = this->startTime;
     }
     this->reminded = reminded;
 }
 
+/**
+ * @brief 打印任务信息
+ */
 void Task::printself() const
 {
     const int width = 15;
