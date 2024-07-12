@@ -51,6 +51,8 @@ public:
      */
     static bool login(const std::string &username, const std::string &passwordHash);
 
+    bool modifyPassword(const std::string &newPasswd);
+
     TaskManager manager; // 该用户的任务管理器
 
 private:

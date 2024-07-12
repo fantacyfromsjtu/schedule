@@ -133,6 +133,9 @@ void mainLoop(User &user)
         {
             ask_add(user_manager);
         }
+        else if (command == "modifypassword"){
+            ask_modifypassword(user);
+        }
         else if (command == "q")
         {
             std::cout << "日志系统，关闭！\n";

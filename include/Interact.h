@@ -17,4 +17,6 @@ void ask_show(TaskManager &usermanager);
 
 void ask_add(TaskManager &usermanager);
 
+void ask_modifypassword(User &user);
+
 #endif

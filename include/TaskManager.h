@@ -16,7 +16,7 @@ class TaskManager
 public:
     TaskManager(std::string username);
 
-    int getTasknum() const { return tasks.size(); }
+    int getNewId() const;
 
     std::string getTaskfile() const
     {
@@ -76,7 +76,7 @@ private:
     std::vector<Task> tasks; ///< 任务列表
     std::unordered_set<std::string> prioritySet ;
     std::unordered_set<std::string> categorySet;
-    
+
     void sort_by_startTime();
 };
 

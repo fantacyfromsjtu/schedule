@@ -1,5 +1,6 @@
 #include "Interact.h"
 #include "Utils.h"
+#include "User.h"
 #include <iostream>
 #include <string>
 #include <termios.h>
@@ -28,6 +29,7 @@ void showHelp()
     std::cout << "  deltask    - 删除任务\n";
     std::cout << "  showtask   - 显示任务\n";
     std::cout << "  q          - 退出系统\n";
+    std::cout << "  modifypassword - 修改密码\n";
 
     Utils::printSeparator();
     Utils::setColor("36"); // Cyan
@@ -71,13 +73,8 @@ void showHelp()
     Utils::printSeparator();
 }
 
-void ask_name_passwd(std::string &username, std::string &password)
+void cinpasswd(std::string &password)
 {
-    std::cout << "用户名:\n";
-    std::cin >> username;
-
-    std::cout << "密码:\n";
-
     // 禁用回显
     termios oldt;
     tcgetattr(STDIN_FILENO, &oldt);
@@ -89,7 +86,14 @@ void ask_name_passwd(std::string &username, std::string &password)
 
     // 恢复回显
     tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+}
 
+void ask_name_passwd(std::string &username, std::string &password)
+{
+    std::cout << "用户名:\n";
+    std::cin >> username;
+    std::cout << "密码:\n";
+    cinpasswd(password);
     std::cout << std::endl; // 换行
 }
 
@@ -115,7 +119,8 @@ void ask_del(TaskManager &usermanager)
         {
             std::cerr << "要删除的任务不存在！\n";
         }
-        else{
+        else
+        {
             std::cout << "删除ID为:" << id << "的任务成功！\n";
         }
     }
@@ -191,7 +196,7 @@ void ask_add(TaskManager &usermanager)
         return;
     }
 
-    int id = usermanager.getTasknum() + 1;
+    int id = usermanager.getNewId();
     Task newtask(id, name, startTime, priority, category, remindTime);
     std::lock_guard<std::mutex> lock(Utils::mtx); // 加锁
     if (usermanager.addTask(newtask))
@@ -201,5 +206,28 @@ void ask_add(TaskManager &usermanager)
     else
     {
         std::cerr << "添加任务 " << newtask.getName() << " 失败\n";
+    }
+}
+void ask_modifypassword(User &user)
+{
+    std::cout << "修改密码界面\n";
+    std::cout << "原密码：\n";
+    std::string oldpasswd;
+    cinpasswd(oldpasswd);
+    if (Utils::sha256(oldpasswd) != user.getPasswordHash())
+    {
+        std::cout << "原密码错误！\n";
+        return;
+    }
+    std::cout << "请输入新密码：\n";
+    std::string newpasswd;
+    cinpasswd(newpasswd);
+    if (user.modifyPassword(newpasswd))
+    {
+        std::cout << "修改密码成功！\n";
+    }
+    else
+    {
+        std::cerr << "修改密码失败！\n";
     }
 }

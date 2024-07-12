@@ -63,3 +63,39 @@ bool User::login(const std::string &username, const std::string &passwordHash)
     }
     return true;
 }
+bool User::modifyPassword(const std::string &newPasswd)
+{
+    std::map<std::string, std::string> users = readUsers(usersfile);
+
+    // 检查用户名是否存在
+    if (users.find(this->username) == users.end())
+    {
+        return false;
+    }
+
+    // 更新内存中的密码散列
+    this->passwordHash = Utils::sha256(newPasswd);
+
+    // 更新文件中的密码散列
+    std::ofstream file(usersfile);
+    if (!file)
+    {
+        std::cerr << "Error opening file: " << usersfile << std::endl;
+        return false;
+    }
+
+    for (const auto &user : users)
+    {
+        if (user.first == this->username)
+        {
+            file << this->username << " " << this->passwordHash << std::endl;
+        }
+        else
+        {
+            file << user.first << " " << user.second << std::endl;
+        }
+    }
+
+    file.close();
+    return true;
+}
