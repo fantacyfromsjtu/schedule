@@ -1,3 +1,6 @@
+// TimeUtils.h
+// 提供时间处理的工具类
+
 #ifndef TIMEUTILS_H
 #define TIMEUTILS_H
 
@@ -11,6 +14,12 @@ class TimeUtils
 {
 public:
     /**
+     * @brief 获取当前年份
+     * @return 返回当前年份字符串（格式为YYYY）
+     */
+    static std::string getCurrentYear();
+
+    /**
      * @brief 获取当前日期
      * @return 返回当前日期字符串（格式为YYYY-MM-DD）
      */
@@ -21,6 +30,12 @@ public:
      * @return 返回当前月份字符串（格式为YYYY-MM）
      */
     static std::string getCurrentMonth();
+
+    /**
+     * @brief 获取当前时间
+     * @return 返回当前时间字符串（格式为YYYY-MM-DD HH:MM:SS）
+     */
+    static std::string getCurrentTime();
 
     /**
      * @brief 验证日期格式
@@ -42,6 +57,20 @@ public:
      * @return 返回格式化后的时间字符串（格式为YYYY-MM-DD HH:MM:SS）
      */
     static std::string formatTime(const std::chrono::system_clock::time_point &timePoint);
+
+    /**
+     * @brief 验证时间格式
+     * @param timeStr 输入时间字符串
+     * @return 格式正确返回true，否则返回false
+     */
+    static bool isValidTime(const std::string &timeStr);
+
+private:
+    /**
+     * @brief 获取当前系统时间并调整为东八区时间
+     * @return 返回当前时间的std::tm结构
+     */
+    static std::tm getLocalTime();
 };
 
 #endif // TIMEUTILS_H
