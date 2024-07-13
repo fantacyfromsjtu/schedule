@@ -30,6 +30,7 @@ ScheduleManager/
 │   ├── TimeUtils.cpp
 │   ├── User.cpp
 │   └── Utils.cpp
+|—— test.sh                      # 测试文件
 ├── CMakeLists.txt               # CMake 构建文件
 └── README.md                    # 项目说明文件
 ```
@@ -95,6 +96,14 @@ make
 
 ```bash
 myschedule -h
+```
+
+## 测试文件运行方法
+注意：每次运行测试文件会清空data目录下所有用户信息！！！
+```
+chmod +x test.sh
+./test.sh
+
 ```
 
 ## 结语
