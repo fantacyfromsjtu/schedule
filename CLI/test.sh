@@ -15,6 +15,7 @@ cd build
 cmake ..
 make
 
+
 # 清空用户和任务数据
 > ../data/users.txt
 rm -f ../data/tasks/*
@@ -39,7 +40,7 @@ expect << EOF
 set timeout -1
 
 # 注册用户
-spawn ./ScheduleManager run
+spawn ./ScheduleManager_CLI run
 expect "注册（输入r） or 登录（输入l） or 退出（输入q）"
 send "r\n"
 expect "用户名:"
@@ -50,7 +51,7 @@ expect "注册成功！"
 send "q\n"
 
 # 登录用户
-spawn ./ScheduleManager run
+spawn ./ScheduleManager_CLI run
 expect "注册（输入r） or 登录（输入l） or 退出（输入q）"
 send "l\n"
 expect "用户名:"

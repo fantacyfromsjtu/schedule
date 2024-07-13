@@ -1,7 +1,9 @@
+# CLI/CMakeLists.txt
+
 cmake_minimum_required(VERSION 3.10)
 
 # 设置项目名称和版本
-project(ScheduleManager VERSION 1.0)
+project(ScheduleManager_CLI VERSION 1.0)
 
 # 设置 C++ 标准
 set(CMAKE_CXX_STANDARD 11)
@@ -23,12 +25,12 @@ set(SRC_FILES
 )
 
 # 生成可执行文件
-add_executable(ScheduleManager ${SRC_FILES})
+add_executable(ScheduleManager_CLI ${SRC_FILES})
 
 # 链接线程库
 find_package(Threads REQUIRED)
-target_link_libraries(ScheduleManager Threads::Threads)
+target_link_libraries(ScheduleManager_CLI Threads::Threads)
 
 # 链接 OpenSSL 库
 find_package(OpenSSL REQUIRED)
-target_link_libraries(ScheduleManager OpenSSL::SSL OpenSSL::Crypto)
+target_link_libraries(ScheduleManager_CLI OpenSSL::SSL OpenSSL::Crypto)
