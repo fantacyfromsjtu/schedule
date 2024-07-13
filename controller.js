@@ -20,10 +20,10 @@ const changePassword = async (req, res) => {
     const rst = await svr.changePassword(userId, newPassword);
     if (rst) {
         res.status(200);
-        res.send('Password Changed Successfully');
+        res.send('修改密码成功');
     } else {
         res.status(404);
-        res.send('Failed to change password');
+        res.send('修改密码失败');
     }
     // Send appropriate response to the client
 }
@@ -40,6 +40,16 @@ const showTaskByDate = async (req, res) => {
     const date = req.query.date;
     try {
         const rst = await svr.showTaskByDate(date);
+        res.send(rst);
+    } catch (err) {
+        res.status(500); res.send(err);
+    }
+}
+
+const showTaskByCategory = async (req, res) => {
+    const category = req.query.category;
+    try {
+        const rst = await svr.showTaskByCategory(category);
         res.send(rst);
     } catch (err) {
         res.status(500); res.send(err);
@@ -64,15 +74,13 @@ const deleteTask = async (req, res) => {
 const reminders = (req, res) => {
     const { taskId } = req.params;
     const { reminderTime } = req.body;
-    scheduleReminder(taskId, reminderTime);
-    // Send appropriate response to the client
+    svr.scheduleReminder(taskId, reminderTime);
 }
 
 const sendReminder = (req, res) => {
     const { userId } = req.params;
     const { reminderMessage } = req.body;
     svr.sendReminder(userId, reminderMessage);
-    // Send appropriate response to the client
 }
 
 async function queryTasks(req, res) {
@@ -98,6 +106,7 @@ module.exports = {
     changePassword,
     addTask,
     showTaskByDate,
+    showTaskByCategory,
     deleteTask,
     reminders,
     queryTasks,

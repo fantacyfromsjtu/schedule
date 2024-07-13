@@ -81,7 +81,7 @@ async function addTask(name, startTime, priority, category, reminderTime, userId
     console.log('任务ID:', row.lastID);
     rst = true;
   } catch (err) {
-    console.error('添加任务失败:', err)
+    console.error('添加任务失败:', err);
   } finally {
     db.close();
   }
@@ -94,11 +94,11 @@ async function showTaskByDate(date) {
   let rst = []; // 用于存储查询结果
 
   const sql = `
-    SELECT * FROM Tasks WHERE startTime like '${date}%'
+    SELECT * FROM Tasks WHERE startTime LIKE '${date}%'
   `;
 
   try {
-    const rows = await db.all(sql, [`${date}%`]); //参数化查询避免SQL注入
+    const rows = await db.all(sql); //参数化查询避免SQL注入
     console.log(rows);
 
     rst = rows.map((row) => {
@@ -123,6 +123,43 @@ async function showTaskByDate(date) {
     return rst;
   }
 }
+
+//从数据库中按类别查询任务
+async function showTaskByCategory(category) {
+  const db = await openDB();
+  let rst = []; // 用于存储查询结果
+
+  const sql = `
+    SELECT * FROM Tasks WHERE category LIKE '${category}%'
+  `;
+
+  try {
+    const rows = await db.all(sql); //参数化查询避免SQL注入
+    console.log(rows);
+
+    rst = rows.map((row) => {
+      return {
+        taskId: row.id,
+        name: row.name,
+        startTime: row.startTime,
+        priority: row.priority,
+        category: row.category,
+        reminderTime: row.reminderTime,
+        userId: row.user,
+        done: row.done
+      };
+    });
+
+    console.log('按照类别显示成功');
+  } catch (err) {
+    console.log(err);
+    throw(err);
+  } finally {
+    db.close ();
+    return rst;
+  }
+}
+
 
 async function deleteTask(taskId) {
   const db = await openDB();
@@ -180,18 +217,23 @@ async function loginUser(username, password) {
 async function changePassword(userId, newPassword) {
   const db = await openDB();
 
-  const sql = 'UPDATE Users SET id = ? WHERE password = ?';
+  console.log("修改密码模块启动")
+
+  const sql = 'UPDATE Users SET password = ? WHERE id = ?';
   const encryptedNewPassword = CryptoJS.SHA256(newPassword).toString();
-  const values = [encryptedNewPassword, userId];
+  const values = [ encryptedNewPassword, userId ];
   let rst = false;
 
   try {
     const result = await db.run(sql, values); 
-    if (result.stmt.changes > 0) { 
+
+    console.log(result);
+
+    if (result.changes > 0) { 
       console.log('密码修改成功~');
       rst = true;
     } else {
-      console.log('未找到该用户');
+      console.log('未发生修改');
       rst = false;
     }
   } catch (err) {
@@ -256,6 +298,7 @@ const services = {
   addUser,
   addTask,
   showTaskByDate,
+  showTaskByCategory,
   deleteTask,
   loginUser,
   changePassword,
