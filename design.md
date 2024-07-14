@@ -238,6 +238,13 @@ schedule/
 │   ├── package.json               # 项目依赖和配置
 ```
 
+<<<<<<< HEAD
+=======
+![image](export.png)
+
+![.\](..\\20200327_1.png "相对路径演示,上一级目录")
+
+>>>>>>> 1f35fb1571a0fb55b5873f6c1c8dbe7fde3cf941
 ### （1）技术栈
 - **前端**：HTML, CSS, JavaScript
 - **后端**：Node.js, Express.js
@@ -269,3 +276,55 @@ schedule/
 - 使用`express`库创建和管理服务器。
 - 通过命令行输入`node index.js`运行本地服务。
 - 浏览器打开`http://localhost:4444/`访问Web应用。
+<<<<<<< HEAD
+=======
+
+### 关键技术说明
+
+#### Web服务器构建
+使用 `express` 框架来创建和管理服务器及其路由。
+
+#### 用户认证
+通过 `session` 中间件管理用户会话，使用 `req.session` 来存储用户登录状态。`checkUser` 函数用于中间件，检查用户是否已登录。
+
+#### 数据库交互
+使用 `sqlite3` 和 `sqlite` 库来操作 SQLite 数据库，创建 `Tasks` 和 `Users` 表，并进行数据的增删改查操作。
+
+#### 密码加密
+使用 `CryptoJS` 库对用户密码进行 SHA-256 加密，确保存储在数据库中的密码安全性。
+
+#### 路由管理
+通过定义不同的路由来处理不同的 HTTP 请求，如登录 (`/login`)、注册 (`/signup`)、任务添加 (`/add-task`)、任务查询 (`/query-tasks`) 等。
+
+#### 静态文件托管
+使用 `express.static` 中间件来托管静态文件，如 HTML 页面和 CSS 样式表。
+
+#### 异步操作
+大量使用 `async/await` 语法来处理异步数据库操作，提高代码的可读性和维护性。
+
+#### 错误处理
+使用 `try/catch` 语句来捕获和处理可能发生的错误，确保程序的健壮性。
+
+#### 安全性
+在用户注册和密码修改时，对密码进行加密处理，避免明文密码存储。
+
+#### RESTful API设计
+遵循 RESTful 原则设计 API，使用不同的 HTTP 方法（如 GET, POST, DELETE）来实现资源的获取、创建和删除。
+
+#### 前端页面跳转
+根据用户的操作结果，使用 `res.redirect` 进行页面跳转，如登录成功后跳转到 `/dashboard`。
+
+#### 服务端渲染
+通过 `res.sendFile` 将 HTML 页面作为响应发送给客户端浏览器。
+
+#### 模块化
+将不同的功能划分为不同的模块（如 `auth`, `services`, `controller` 等），并使用 `module.exports` 进行导出，提高代码的可维护性和可重用性。
+
+### 项目展示
+
+![image](login.png)
+
+![image](board.png)
+
+![image](secret.png)
+>>>>>>> 1f35fb1571a0fb55b5873f6c1c8dbe7fde3cf941
