@@ -2,7 +2,7 @@
 
 ## 命令行版本
 
-### 1. 安装依赖
+### 1. 安装依赖（Ubuntu环境）
 
 ```bash
 sudo apt update
