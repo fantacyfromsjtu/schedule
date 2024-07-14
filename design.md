@@ -10,10 +10,11 @@
 
 
 ## 2.  命令行版本设计
-
-### （1）模块与类的设计
+### 2.1 模块与类的设计
 
 命令行版本的总体设计如下：
+
+本项目严格遵从C++面向对象编程的思想，采用模块化编程。对于所有类均给出头文件和源文件。
 
 ```bash
 schedule/
@@ -42,7 +43,167 @@ schedule/
 |...
 ```
 
+本项目主要包含五大模块：**交互模块，用户管理模块，任务管理模块，工具函数模块，以及测试模块**。下面依次进行说明。
 
+
+
+**交互模块**
+
+主要由main.cpp 以及Interact类组成，负责处理用户输入。main主要处理用户的第一层输入，比如登录注册等等。而具体的第二层输入（例如增加删除任务等等），则交由Interact模块完成。
+
+
+
+**用户管理模块**
+
+主要由User类完成，负责用户的注册，登录等功能。支持多用户，保证每个用户的任务相互独立。另外，我们还额外实现了修改密码功能。
+
+
+
+**任务管理模块**
+
+本模块是项目的核心模块，主要由Task类，TaskManager类，Reminder类组成。
+
+Task类包含单个任务的各种属性及其接口。
+
+TaskManager类是任务的“统领”，每一个用户都绑定一个TaskManager，其核心是维护一个元素为Task的vector，包含对该用户任务的增加，删除，查询等操作。
+
+Reminder类是实现任务提醒的类，提醒线程实现每10秒检查一次有没有任务需要提醒。
+
+
+
+**工具函数模块**
+
+本模块主要由Utils类TimeUtils类组成
+
+TimeUtils类实现了与时间相关的辅助函数，例如获取当前时间，以及时间的字符串-std::chrono::system_clock::time_point（C++11标准库的系统时间）的相互转换
+
+Util类实现了其他一些辅助函数，例如SHA256哈希函数，颜色设置等函数
+
+
+
+**测试模块**
+
+test.sh，完成自动化测试
+
+### 2.2 流程图
+
+![image-20240714231844899](E:\大学\大学学习all in one\大二暑期课程\计算机编程实践\proj\assets\image-20240714231844899.png)
+
+### 2.3  关键技术问题实现
+
+#### 2.3.1 多线程
+
+在项目中，多线程机制主要体现在 `Reminder` 类的实现上。`Reminder` 类通过一个独立的线程不断检查是否有任务需要提醒。
+
+**`Reminder::start` 函数**:
+
+```cpp
+void Reminder::start()
+{
+    running = true;
+    reminderThread = std::thread([this]()
+                                 {
+        while (running) {
+            checkReminders();
+            std::this_thread::sleep_for(std::chrono::seconds(10)); // 每10s检查一次
+        } });
+}
+
+```
+
+- `std::thread`：用于创建一个新的线程，在本例中，启动一个线程来定期检查任务提醒。
+- `std::this_thread::sleep_for`：使线程睡眠指定时间段，这里是10秒，表示每10秒检查一次任务提醒。
+
+为了防止多个线程同时对Task列表或者任务文件进行写操作，或者当一个线程进行写操作时，另一个文件进行读操作，需要引入互斥锁，以实现多个线程对临界资源的互斥访问。
+
+```cpp
+namespace Utils
+{
+    std::mutex mtx;
+}
+```
+
+- `std::mutex mtx`：在 `Utils` 命名空间中定义一个互斥锁实例 `mtx`。
+
+使用实例（删除任务）
+
+```cpp
+void ask_del(TaskManager &usermanager)
+{
+	...  
+    if (yorn == 'y' || yorn == 'Y') //确认删除
+    {
+        std::lock_guard<std::mutex> lock(Utils::mtx); // 加锁
+        bool isdel = usermanager.deleteTask(id);
+        ...
+    }
+}
+
+```
+
+- `std::lock_guard<std::mutex>`：RAII 方式管理互斥锁，**在构造时自动获取锁，在析构时自动释放锁**，避免手动调用 `lock` 和 `unlock` 带来的错误。
+
+当然，在添加任务，显示任务，提醒线程遍历任务等涉及到读写文件和修改Task列表的操作时，也要进行加锁操作。另外，由于提醒线程每10s才检查一次，检查完立刻释放锁，所以不会引起死锁的问题。
+
+#### 2.3.2 时间的获取与处理
+
+本项目中时间的获取与处理使用了C++标准库中的`<chrono>`、`<ctime>`、`<iomanip>`、`<sstream>`和`<regex>`，这些库和函数提供了强大的时间管理和字符串处理能力。下面详细解释时间获取与处理的具体实现。
+
+1. 获取当前时间
+   - 使用`std::chrono`库获取当前系统时间。
+   - 使用`std::time_t`和`std::localtime`函数将系统时间转换为易于操作的时间结构。
+2. 格式化时间
+   - 使用`std::ostringstream`和`std::put_time`函数将时间结构格式化为字符串。
+3. 解析时间
+   - 使用`std::istringstream`和`std::get_time`函数将时间字符串解析为时间结构。
+4. 验证时间格式
+   - 使用正则表达式`<regex>`验证时间字符串格式的合法性。
+
+#### 2.3.3 哈希加密
+
+在本项目中，密码的加密存储是通过使用SHA-256哈希函数实现的。SHA-256是一种加密哈希函数，用于将输入数据转换为固定长度的散列值（哈希值）。该方法确保了密码的安全存储，即使用户信息泄露，攻击者也难以从散列值反推出原始密码。
+
+在项目中，我们使用了OpenSSL库中的EVP（高层加密抽象）接口来实现SHA-256哈希算法。EVP接口提供了一种通用的方式来调用各种加密和哈希算法。
+
+1. **创建并初始化EVP_MD_CTX上下文**
+    ```cpp
+    EVP_MD_CTX *context = EVP_MD_CTX_new();
+    EVP_DigestInit_ex(context, EVP_sha256(), nullptr);
+    ```
+    - `EVP_MD_CTX_new()`：创建一个新的消息摘要上下文。
+    - `EVP_DigestInit_ex(context, EVP_sha256(), nullptr)`：初始化上下文以使用SHA-256算法。
+
+2. **更新上下文以包含输入数据**
+    ```cpp
+    EVP_DigestUpdate(context, str.c_str(), str.size());
+    ```
+    - `EVP_DigestUpdate(context, str.c_str(), str.size())`：将输入数据添加到上下文中进行处理。
+
+3. **完成哈希计算并获取结果**
+    
+    ```cpp
+    EVP_DigestFinal_ex(context, hash, &lengthOfHash);
+    EVP_MD_CTX_free(context);
+    ```
+    - `EVP_DigestFinal_ex(context, hash, &lengthOfHash)`：完成哈希计算，并将结果存储在`hash`数组中，长度存储在`lengthOfHash`中。
+    - `EVP_MD_CTX_free(context)`：释放上下文资源。
+    
+4. **将结果转换为十六进制字符串表示**
+    
+    ```cpp
+    std::stringstream ss;
+    for (unsigned int i = 0; i < lengthOfHash; ++i)
+    {
+        ss << std::hex << std::setw(2) << std::setfill('0') << (int)hash[i];
+    }
+    ```
+    - 使用`std::stringstream`将每个字节转换为两位的十六进制字符串，并拼接成最终的哈希字符串。
+
+
+
+
+
+****
 
 ## 3. Web版本设计
 
