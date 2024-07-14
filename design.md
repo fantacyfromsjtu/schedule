@@ -238,13 +238,10 @@ schedule/
 │   ├── package.json               # 项目依赖和配置
 ```
 
-<<<<<<< HEAD
-=======
 ![image](export.png)
 
 ![.\](..\\20200327_1.png "相对路径演示,上一级目录")
 
->>>>>>> 1f35fb1571a0fb55b5873f6c1c8dbe7fde3cf941
 ### （1）技术栈
 - **前端**：HTML, CSS, JavaScript
 - **后端**：Node.js, Express.js
@@ -276,8 +273,6 @@ schedule/
 - 使用`express`库创建和管理服务器。
 - 通过命令行输入`node index.js`运行本地服务。
 - 浏览器打开`http://localhost:4444/`访问Web应用。
-<<<<<<< HEAD
-=======
 
 ### 关键技术说明
 
@@ -327,4 +322,3 @@ schedule/
 ![image](board.png)
 
 ![image](secret.png)
->>>>>>> 1f35fb1571a0fb55b5873f6c1c8dbe7fde3cf941
