@@ -51,8 +51,6 @@ void Reminder::checkReminders()
         if (!task.getremind() && remindTime <= now && remindTime <= startTime && now + std::chrono::seconds(2) > remindTime) // 2s 提前量
         {
             task.getremind() = true;
-            taskManager.deleteTask(task.getId());
-            taskManager.addTask(task);
             Utils::setColor("1"); // Bold
             std::cout << "\nREMIND!!\n";
             Utils::resetColor();
