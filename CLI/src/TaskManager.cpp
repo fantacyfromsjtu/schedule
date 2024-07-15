@@ -114,7 +114,7 @@ void TaskManager::loadTasks(const std::string &filename)
         std::string priority;
         std::string category;
         std::string reminderTime;
-        bool reminded;
+        bool reminded = false;
 
         if (!(iss >> id >> name >> std::ws))
         {
@@ -133,7 +133,7 @@ void TaskManager::loadTasks(const std::string &filename)
             std::cerr << "Error parsing line: " << line << std::endl;
             continue;
         }
-        iss >> std::ws >> reminded;
+        
         Task task(id, name, startTime, priority, category, reminderTime, reminded);
         tasks.push_back(task);
     }
@@ -150,7 +150,7 @@ bool TaskManager::saveTasks(const Task &task, const std::string &filename) const
     {
         taskFile << task.getId() << " " << task.getName() << " \"" << task.getStartTime() << "\" "
                  << task.getPriority() << " " << task.getCategory() << " \"" << task.getReminderTime() << "\" "
-                 << task.getremind_const() << std::endl;
+                  << std::endl;
         taskFile.close();
     }
     else
